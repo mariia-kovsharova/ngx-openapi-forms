@@ -22,19 +22,19 @@ const mergeProperties = (props: EntityDescription[]) => {
   };
 };
 
+const normalizeReducer = (acc: EntityDescription[], d: DescriptionType): EntityDescription[] => {
+  const value = normalize(d);
+  value && acc.push(value);
+  return acc;
+}
+
 const normalize = (values: EntityType): EntityDescription | null => {
   if (isEnum(values)) {
     return null;
   }
   if (isComplex(values)) {
     const { allOf } = values;
-    const normalizedAllOf = allOf.reduce((acc: EntityDescription[], d: DescriptionType) => {
-      const value = normalize(d);
-      if (value) {
-        acc.push(value);
-      }
-      return acc;
-    }, []);
+    const normalizedAllOf = allOf.reduce(normalizeReducer, []);
     return mergeProperties(normalizedAllOf);
   }
   return values as EntityDescription;

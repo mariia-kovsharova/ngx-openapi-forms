@@ -1,0 +1,2 @@
+https://travis-ci.org/fiorsaoirse/angular-openapi-forms-gen.svg?branch=master
+<a href="https://codeclimate.com/github/fiorsaoirse/angular-openapi-forms-gen/maintainability"><img src="https://api.codeclimate.com/v1/badges/6d1fc8b0ef0b27065dad/maintainability" /></a>

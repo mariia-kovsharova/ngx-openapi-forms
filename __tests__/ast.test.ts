@@ -3,11 +3,17 @@ import generateFiles from '../src/main';
 import { promises as fs } from 'fs';
 import camelcase from 'camelcase';
 
+type TestData = {
+  filepath: string;
+  extraDescription?: string;
+}
+
 describe('Test creating Reactive Angular Form files from open-api descriptions', () => {
+  const apiFiles: TestData[] = [];
   const fixturesPath = path.join(__dirname, '__fixtures__');
   const formsFilesDirPath = path.join(fixturesPath, 'forms');
-  const apiJsonFile = path.join(fixturesPath, 'api.json');
-  const apiYmlFile = path.join(fixturesPath, 'api.yml');
+  apiFiles.push({ filepath: path.join(fixturesPath, 'api.json') });
+  apiFiles.push({ filepath: path.join(fixturesPath, 'api.yml') });
   let formsMap = new Map<string, string>();
 
   const readFileContent = async (fileName: string): Promise<string> => {
@@ -27,20 +33,15 @@ describe('Test creating Reactive Angular Form files from open-api descriptions',
     done();
   });
 
-  it('should generate forms from .json open-api file', async () => {
-    const models = await generateFiles(apiJsonFile);
-    models.forEach(([file, fileName]) => {
-      const expectedData = formsMap.get(camelcase(fileName));
-      expect(file).toBe(expectedData);
-    });
-  });
-
-  it('should generate forms from .yml open-api file', async () => {
-    const models = await generateFiles(apiYmlFile);
-    models.forEach(([file, fileName]) => {
-      const expectedData = formsMap.get(camelcase(fileName));
-      expect(file).toBe(expectedData);
-    });
+  apiFiles.forEach(({ filepath, extraDescription }) => {
+    const { ext } = path.parse(filepath);
+    it(`should generate forms from ${ext} open-api file. ${extraDescription}`, async () => {
+      const models = await generateFiles(filepath);
+      models.forEach(([file, fileName]) => {
+        const expectedData = formsMap.get(camelcase(fileName));
+        expect(file).toBe(expectedData);
+      });
+    })
   });
 });
 

@@ -4,6 +4,12 @@
   "description": "Generates Angular Reactive forms as multiply files with formGroup definition from open-api YAML or JSON",
   "main": "dist/main.js",
   "bin": "dist/bin/index.js",
+  "files": [
+    "dist"
+  ],
+  "bugs": {
+    "url": "https://github.com/fiorsaoirse/angular-openapi-forms-gen/issues"
+  },
   "scripts": {
     "test": "jest",
     "build": "npm run build-ts & npm run build-types",
