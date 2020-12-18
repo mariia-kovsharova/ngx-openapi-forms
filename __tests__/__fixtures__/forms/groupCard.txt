@@ -1,6 +1,6 @@
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
-const user = new FormGroup({
+const groupCard = new FormGroup({
   objectId: new FormControl(
     {
       value: null,
@@ -8,19 +8,23 @@ const user = new FormGroup({
     },
     [],
   ),
-  login: new FormControl(
+  modifyDate: new FormControl(
     {
       value: null,
-      disabled: false,
+      disabled: true,
     },
-    [Validators.pattern(/^[a-zA-Z]&/), Validators.required],
+    [],
   ),
-  address: new FormControl(
+  name: new FormControl(
     {
       value: null,
       disabled: false,
     },
-    [Validators.email, Validators.required],
+    [
+      Validators.pattern(/^[a-zA-Z0-9]&/),
+      Validators.minLength(5),
+      Validators.maxLength(20),
+    ],
   ),
   description: new FormControl(
     {
@@ -29,14 +33,16 @@ const user = new FormGroup({
     },
     [],
   ),
-  roles: new FormArray([]),
-  active: new FormControl(
+  users: new FormArray([]),
+  childGroups: new FormArray([]),
+  parentGroups: new FormArray([]),
+  address: new FormControl(
     {
       value: null,
       disabled: false,
     },
-    [Validators.required],
+    [Validators.email],
   ),
 });
 
-export default user;
+export default groupCard;

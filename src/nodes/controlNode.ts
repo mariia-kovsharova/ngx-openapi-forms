@@ -1,4 +1,4 @@
-import { Entity, EntityDescription, EntityProperty } from '../types/swagger-types';
+import { Entity, EntityProperty } from '../types/swagger-types';
 import getRule from '../validation/rules';
 import { BaseNode } from './baseNode';
 

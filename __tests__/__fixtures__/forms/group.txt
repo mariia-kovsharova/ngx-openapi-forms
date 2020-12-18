@@ -1,0 +1,31 @@
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const group = new FormGroup({
+  objectId: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    [],
+  ),
+  name: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [
+      Validators.pattern(/^[a-zA-Z0-9]&/),
+      Validators.minLength(5),
+      Validators.maxLength(20),
+    ],
+  ),
+  description: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+});
+
+export default group;

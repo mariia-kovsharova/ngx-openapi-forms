@@ -8,17 +8,13 @@ const isComplex = (values: EntityType): values is ComplexDescription => values.h
 
 const isEnum = (values: EntityType) => values.hasOwnProperty('enum');
 
-const mergeProperties = (props: EntityDescription[]) => {
-  const mergedProps = props.reduce(
-    (acc: EntityField, prop: EntityDescription) => ({
-      ...acc,
-      ...prop.properties,
-    }),
-    {}
-  );
+const merge = (props: EntityDescription[]) => {
+  const required = props    .reduce((acc: string[], { required }: EntityDescription) => [...acc, ...required ?? []], []);
+  const properties = props.reduce((acc: EntityField, { properties }: EntityDescription) => ({ ...acc, ...properties, }), {});
   return {
     type: 'object',
-    properties: mergedProps,
+    properties,
+    required,
   };
 };
 
@@ -35,7 +31,7 @@ const normalize = (values: EntityType): EntityDescription | null => {
   if (isComplex(values)) {
     const { allOf } = values;
     const normalizedAllOf = allOf.reduce(normalizeReducer, []);
-    return mergeProperties(normalizedAllOf);
+    return merge(normalizedAllOf);
   }
   return values as EntityDescription;
 };

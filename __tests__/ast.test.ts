@@ -35,7 +35,7 @@ describe('Test creating Reactive Angular Form files from open-api descriptions',
 
   apiFiles.forEach(({ filepath, extraDescription }) => {
     const { ext } = path.parse(filepath);
-    it(`should generate forms from ${ext} open-api file. ${extraDescription}`, async () => {
+    it(`should generate forms from ${ext} open-api file. ${extraDescription ?? ''}`, async () => {
       const models = await generateFiles(filepath);
       models.forEach(([file, fileName]) => {
         const expectedData = formsMap.get(camelcase(fileName));

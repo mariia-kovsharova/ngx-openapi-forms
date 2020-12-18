@@ -22,7 +22,7 @@ components:
         objectId:
           type: "string"
           readOnly: true
-        
+
     IBaseCardEntity:
       allOf:
         - $ref: "#/components/schemas/IBaseEntity"
@@ -48,7 +48,7 @@ components:
             roles:
               type: "array"
               items:
-                $ref: '#/components/schemas/Roles'
+                $ref: "#/components/schemas/Roles"
             active:
               type: "boolean"
               default: false
@@ -72,6 +72,43 @@ components:
             - name
           xml:
             name: "UserCard"
+    Group:
+      allOf:
+        - $ref: "#/components/schemas/IBaseEntity"
+        - type: "object"
+          properties:
+            name:
+              type: "string"
+              pattern: "/^[a-zA-Z0-9]&/"
+              minLength: 5
+              maxLength: 20
+            description:
+              type: "string"
+          xml:
+            name: "Group"
+    GroupCard:
+      allOf:
+        - $ref: "#/components/schemas/IBaseCardEntity"
+        - $ref: "#/components/schemas/Group"
+        - type: "object"
+          properties:
+            users:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/User"
+            childGroups:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Group"
+            parentGroups:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/Group"
+            address:
+              type: "string"
+              format: "email"
+          xml:
+            name: "GroupCard"
     Roles:
       type: "string"
       enum:
