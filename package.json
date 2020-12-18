@@ -1,0 +1,56 @@
+{
+  "name": "angular-openapi-form-gen",
+  "version": "0.0.1",
+  "description": "Generates Angular Reactive forms as multiply files with formGroup definition from open-api YAML or JSON",
+  "main": "dist/main.js",
+  "bin": "dist/bin/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "npm run build-ts & npm run build-types",
+    "build-types": "tsc",
+    "build-ts": "babel src --out-dir dist --extensions \".ts\" --source-maps inline",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix"
+  },
+  "author": "Maria Kovsharova",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/plugin-transform-typescript": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
+    "@types/commander": "^2.12.2",
+    "@types/inquirer": "^7.3.1",
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.14",
+    "@types/prettier": "^2.1.5",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.4.4",
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^10.0.2",
+    "@babel/runtime": "^7.12.5",
+    "camelcase": "^6.2.0",
+    "commander": "^6.2.1",
+    "prettier": "^2.2.1"
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "node_modules"
+    ]
+  }
+}

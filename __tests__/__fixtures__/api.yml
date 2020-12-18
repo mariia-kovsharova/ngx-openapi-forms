@@ -1,0 +1,81 @@
+openapi: "3.0.3"
+info:
+  description: "Test OpenApi Data"
+  version: "1.0.0"
+  title: "Test OpenApi Data"
+paths:
+  /users:
+    get:
+      tags:
+        - "users"
+      description: "Get list of users"
+      responses:
+        "200":
+          description: "OK"
+        "403":
+          description: "Method not allowed"
+components:
+  schemas:
+    IBaseEntity:
+      type: "object"
+      properties:
+        objectId:
+          type: "string"
+          readOnly: true
+        
+    IBaseCardEntity:
+      allOf:
+        - $ref: "#/components/schemas/IBaseEntity"
+        - type: "object"
+          properties:
+            modifyDate:
+              type: "string"
+              format: "date-time"
+              readOnly: true
+    User:
+      allOf:
+        - $ref: "#/components/schemas/IBaseEntity"
+        - type: "object"
+          properties:
+            login:
+              type: "string"
+              pattern: "/^[a-zA-Z]&/"
+            address:
+              type: "string"
+              format: "email"
+            description:
+              type: "string"
+            roles:
+              type: "array"
+              items:
+                $ref: '#/components/schemas/Roles'
+            active:
+              type: "boolean"
+              default: false
+          required:
+            - login
+            - address
+            - active
+          xml:
+            name: "User"
+    UserCard:
+      allOf:
+        - $ref: "#/components/schemas/IBaseCardEntity"
+        - $ref: "#/components/schemas/User"
+        - type: "object"
+          properties:
+            password:
+              type: "string"
+            name:
+              type: "string"
+          required:
+            - name
+          xml:
+            name: "UserCard"
+    Roles:
+      type: "string"
+      enum:
+        - admin
+        - user
+      xml:
+        name: "Roles"

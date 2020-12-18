@@ -1,0 +1,42 @@
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const user = new FormGroup({
+  objectId: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    [],
+  ),
+  login: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.pattern(/^[a-zA-Z]&/)],
+  ),
+  address: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.email],
+  ),
+  description: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+  roles: new FormArray([]),
+  active: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+});
+
+export default user;
