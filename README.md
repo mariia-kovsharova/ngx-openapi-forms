@@ -8,7 +8,7 @@ This is npm-cli library that allows you to generate Angular Reactive Forms for m
 1. Run `npm i angular-openapi-form-gen --save-dev` in terminal
 
 ### Usage
-1. In terminal type `angular-openapi-form-gen <openapi-file-path-param> <output-dir-param>`. All params are required.
+1. In terminal type `angular-openapi-form-gen --input <path-to-openapi> --output <output-dir-path>`. All params are required.
 2. The lib will parse your open-api file than creates one file per model in description. The created `model.ts` file will contain Angular exported as default FormGroup with FormControls and FormArrays from open-api model, **including validation** from open-api.
 
 ### Example
