@@ -1,7 +1,7 @@
 import { Entity } from '../types/swagger-types';
-import { BaseNode } from './baseNode';
+import BaseNode from './baseNode';
 
-export class ArrayNode extends BaseNode {
+export default class ArrayNode extends BaseNode {
   constructor([name, _value]: Entity) {
     super(name, 'array');
   }

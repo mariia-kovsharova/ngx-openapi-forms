@@ -8,9 +8,10 @@ type TestData = {
   extraDescription?: string;
 }
 
+const fixturesPath = path.join(__dirname, '__fixtures__');
+
 describe('Test creating Reactive Angular Form files from open-api descriptions', () => {
   const apiFiles: TestData[] = [];
-  const fixturesPath = path.join(__dirname, '__fixtures__');
   const formsFilesDirPath = path.join(fixturesPath, 'forms');
   apiFiles.push({ filepath: path.join(fixturesPath, 'api.json') });
   apiFiles.push({ filepath: path.join(fixturesPath, 'api.yml') });
@@ -42,6 +43,16 @@ describe('Test creating Reactive Angular Form files from open-api descriptions',
         expect(file).toBe(expectedData);
       });
     })
+  });
+});
+
+describe('Swagger version', () => {
+  const unsupportedApiFile = path.join(fixturesPath, 'swagger.json');
+
+  it('should test async errors', async () =>  {
+    await expect(generateFiles(unsupportedApiFile))
+      .rejects
+      .toThrow('Current version of library supports only OpenApi versions 3.0 and above.');
   });
 });
 

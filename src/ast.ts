@@ -1,12 +1,14 @@
 import { Entity, EntityDescription } from 'types/swagger-types';
-import { ArrayNode } from './nodes/arrayNode';
-import { BaseNode } from './nodes/baseNode';
-import { ControlNode } from './nodes/controlNode';
-import { GroupNode } from './nodes/groupNode';
+import ArrayNode from './nodes/arrayNode';
+import BaseNode from './nodes/baseNode';
+import ControlNode from './nodes/controlNode';
+// TODO: fix it
+// eslint-disable-next-line import/no-cycle
+import GroupNode from './nodes/groupNode';
 
 type nodeConstructor = (e: Entity) => BaseNode;
 
-const entityMapper = (type: string): nodeConstructor => (entity: Entity): BaseNode => {  
+const entityMapper = (type: string): nodeConstructor => (entity: Entity): BaseNode => {
   switch (type) {
     case 'object':
       return new GroupNode(entity);
@@ -21,7 +23,7 @@ const entityMapper = (type: string): nodeConstructor => (entity: Entity): BaseNo
   }
 };
 
-export const generateAst = (entity: Entity) => {
+export default (entity: Entity): BaseNode => {
   if (!entity) {
     throw new Error('Entity can not be null');
   }

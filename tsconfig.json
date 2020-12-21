@@ -21,16 +21,15 @@
       "node_modules/@types"
     ],
     "declaration": true,
-    "emitDeclarationOnly": true,
     "isolatedModules": true
   },
   "include": [
-    "./src/*",
+    "./src/**/*",
     ".eslintrc.js"
   ],
   "exclude": [
     "**/node_modules",
-    "**/__tests__",
+    "**/__tests__/*",
     "**/dist"
   ]
 }

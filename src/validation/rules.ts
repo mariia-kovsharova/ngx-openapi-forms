@@ -5,7 +5,7 @@ const ruleMapper = [
   },
   {
     check: (name: string) => name === 'pattern',
-    process: (value: unknown) => `Validators.pattern(${value})`,
+    process: (value: unknown) => `Validators.pattern(${value as string})`,
   },
   {
     check: (name: string) => name === 'required',
@@ -13,19 +13,19 @@ const ruleMapper = [
   },
   {
     check: (name: string) => name === 'minLength',
-    process: (value: unknown) => `Validators.minLength(${value})`,
+    process: (value: unknown) => `Validators.minLength(${value as number})`,
   },
   {
     check: (name: string) => name === 'maxLength',
-    process: (value: unknown) => `Validators.maxLength(${value})`,
+    process: (value: unknown) => `Validators.maxLength(${value as number})`,
   },
   {
     check: (name: string) => name === 'minimum',
-    process: (value: unknown) => `Validators.min(${value})`,
+    process: (value: unknown) => `Validators.min(${value as number})`,
   },
   {
     check: (name: string) => name === 'maximum',
-    process: (value: unknown) => `Validators.max(${value})`,
+    process: (value: unknown) => `Validators.max(${value as number})`,
   },
 ];
 

@@ -2,9 +2,11 @@ import camelcase from 'camelcase';
 
 type nodeTypes = 'control' | 'array' | 'group';
 
-export abstract class BaseNode {
+export default abstract class BaseNode {
   public name: string;
+
   public type: nodeTypes;
+
   constructor(name: string, type: nodeTypes) {
     this.name = name;
     this.type = type;

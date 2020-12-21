@@ -1,17 +1,3 @@
-export type Entity = [key: string, value: ComplexDescription | EntityDescription | EntityField];
-
-export type ComplexDescription = {
-  allOf: (EntityDescription | ComplexDescription)[];
-};
-
-export type EntityDescription = {
-  type: string;
-  properties: EntityField;
-  required?: string[];
-};
-
-export type EntityField = { [key: string]: EntityProperty };
-
 export type EntityProperty = {
   type: string;
   format?: string;
@@ -24,3 +10,17 @@ export type EntityProperty = {
   maxLength?: number;
   required?: boolean;
 };
+
+export type EntityField = { [key: string]: EntityProperty };
+
+export type EntityDescription = {
+  type: string;
+  properties: EntityField;
+  required?: string[];
+};
+
+export type ComplexDescription = {
+  allOf: (EntityDescription | ComplexDescription)[];
+};
+
+export type Entity = [string, ComplexDescription | EntityDescription | EntityField];

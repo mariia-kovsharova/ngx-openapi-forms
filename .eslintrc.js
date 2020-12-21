@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
     'airbnb-base',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
@@ -21,6 +22,26 @@ module.exports = {
   env: {
     node: true,
     browser: true,
+    es2020: true,
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-unused-vars': 0,
+    'import/extensions': [
+      2,
+      'ignorePackages',
+      {
+        js: 'never',
+        ts: 'never',
+      },
+    ],
+  },
+  settings: {
+    'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx'],
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['node_modules', 'src/'],
+      },
+    },
+  },
 };

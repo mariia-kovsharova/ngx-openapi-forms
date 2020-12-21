@@ -1,17 +1,18 @@
 import { Entity, EntityProperty } from '../types/swagger-types';
 import getRule from '../validation/rules';
-import { BaseNode } from './baseNode';
+import BaseNode from './baseNode';
 
-export class ControlNode extends BaseNode {
+export default class ControlNode extends BaseNode {
   public validationRules?: string[];
-  public disabled: boolean = false;
+
+  public disabled = false;
 
   constructor([name, value]: Entity) {
     super(name, 'control');
     const props = value as EntityProperty;
     const rules = Object.entries(props);
     this.validationRules = rules.map(getRule).filter(Boolean);
-    this.disabled = props.hasOwnProperty('readOnly');
+    this.disabled = Object.prototype.hasOwnProperty.call(props, 'readOnly');
   }
 
   public getValidationRules(): string {
@@ -21,7 +22,7 @@ export class ControlNode extends BaseNode {
   public process(): string {
     return `${this.name}: new FormControl({
       value: null,
-      disabled: ${this.disabled},
+      disabled: ${this.disabled.toString()},
     }, [${this.getValidationRules()}])`;
   }
 }

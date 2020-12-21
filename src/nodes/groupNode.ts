@@ -1,20 +1,24 @@
-import { generateAst } from '../ast';
+// TODO: fix it
+// eslint-disable-next-line import/no-cycle
+import generateAst from '../ast';
 import { Entity, EntityDescription } from '../types/swagger-types';
-import { BaseNode } from './baseNode';
+import BaseNode from './baseNode';
 
-export class GroupNode extends BaseNode {
+export default class GroupNode extends BaseNode {
   private children: BaseNode[];
 
   constructor([name, value]: Entity) {
     super(name, 'group');
     const { properties, required } = value as EntityDescription;
-    required?.forEach((propName: string) => {
-      if (properties.hasOwnProperty(propName)) {
-        properties[propName] = { ...properties[propName], required: true };
-      }
-    });
+    if (required) {
+      required.forEach((propName: string) => {
+        if (Object.prototype.hasOwnProperty.call(properties, propName)) {
+          properties[propName] = { ...properties[propName], required: true };
+        }
+      });
+    }
     const rawChildren = Object.entries(properties) as Entity[];
-    this.children = rawChildren.map((entity: Entity) => generateAst(entity));
+    this.children = rawChildren.map(generateAst);
   }
 
   public process(): string {

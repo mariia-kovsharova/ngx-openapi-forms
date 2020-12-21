@@ -1,0 +1,27 @@
+{
+  "basePath": "test",
+  "swagger": "2.0",
+  "info": {
+    "description": "Test OpenApi2 Data",
+    "version": "1.0.0",
+    "title": "Test OpenApi2 Data"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "Get list of users",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Method not allowed"
+          }
+        }
+      }
+    }
+  }
+}
