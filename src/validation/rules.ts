@@ -5,7 +5,7 @@ const ruleMapper = [
   },
   {
     check: (name: string) => name === 'pattern',
-    process: (value: unknown) => `Validators.pattern(${value as string})`,
+    process: (value: unknown) => `Validators.pattern(/${value as string}/)`,
   },
   {
     check: (name: string) => name === 'required',

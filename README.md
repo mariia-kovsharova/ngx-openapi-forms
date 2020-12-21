@@ -30,7 +30,7 @@ User:
           properties:
             login:
               type: "string"
-              pattern: "/^[a-zA-Z]&/"
+              pattern: "^[a-zA-Z]&"
             address:
               type: "string"
               format: "email"
@@ -57,7 +57,7 @@ Group:
           properties:
             name:
               type: "string"
-              pattern: "/^[a-zA-Z0-9]&/"
+              pattern: "^[a-zA-Z0-9]&"
               minLength: 5
               maxLength: 20
             description:
