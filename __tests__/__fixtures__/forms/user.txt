@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
 const user = new FormGroup({
@@ -39,4 +41,4 @@ const user = new FormGroup({
   ),
 });
 
-export default user;
+export default { ...user };

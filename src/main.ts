@@ -7,7 +7,10 @@ import generateAst from './ast';
 import normalize from './normalize';
 
 const generateHeader = (): string => {
-  return `import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';`;
+  return `
+  /* tslint:disable */
+  /* eslint-disable */
+  import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';`;
 };
 
 export const makeFile = (node: BaseNode): string => {

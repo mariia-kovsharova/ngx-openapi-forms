@@ -1,6 +1,6 @@
 {
   "name": "angular-openapi-form-gen",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Generates Angular Reactive forms as multiply files with formGroup definition from open-api YAML or JSON",
   "main": "dist/main.js",
   "bin": "dist/bin/index.js",

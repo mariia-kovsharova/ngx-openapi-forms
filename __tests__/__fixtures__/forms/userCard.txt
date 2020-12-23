@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
 const userCard = new FormGroup({
@@ -60,4 +62,4 @@ const userCard = new FormGroup({
   ),
 });
 
-export default userCard;
+export default { ...userCard };
