@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/fiorsaoirse/angular-openapi-forms-gen.svg?branch=master)](https://travis-ci.org/fiorsaoirse/angular-openapi-forms-gen)
 <a href="https://codeclimate.com/github/fiorsaoirse/angular-openapi-forms-gen/maintainability"><img src="https://api.codeclimate.com/v1/badges/6d1fc8b0ef0b27065dad/maintainability" /></a>
 
-This is npm-cli library that allows you to generate Angular Reactive Forms for models from Open-Api 3.0 description.
+This is an npm-cli library that allows you to generate Angular Reactive Forms for models from the Open-Api 3.0 description.
 
 
 ### Installation
@@ -9,10 +9,11 @@ This is npm-cli library that allows you to generate Angular Reactive Forms for m
 
 ### Usage
 1. In terminal type `angular-openapi-form-gen --input <path-to-openapi> --output <output-dir-path>`. All params are required.
-2. The lib will parse your open-api file than creates one file per model in description. The created `model.ts` file will contain Angular exported as default FormGroup with FormControls and FormArrays from open-api model, including validation from open-api.
+2. The lib will parse your open-api file than create one file per top-level model of "object" type in the description.
+3. The created `model.ts` file will contain exported as default Angular FormGroup with FormControls and FormArrays from the open-api model, including validation.
 
 ### Important note
-You should import deep copy of generated FormGroup object to avoid unexpected behavior.
+You should import a deep copy of the generated FormGroup object to avoid unexpected behavior.
 For expample, use *cloneDeep* method from [lodash](https://lodash.com/docs)
 
 ### Example
@@ -20,6 +21,9 @@ For expample, use *cloneDeep* method from [lodash](https://lodash.com/docs)
 OpenApi entities:
 
 ```
+PlainProperty:
+      type: "string"
+
 IBaseEntity:
       type: "object"
       properties:
@@ -69,7 +73,7 @@ Group:
           xml:
             name: "Group"
 ```
-
+The lib will generate Reactive forms for **User** and **Group** openapi-models. **PlainProperty** is not a FormGroup, **IBaseEntity** is an interface or abstract class for classes.
 Generated multiply files:
 
 **user.ts**

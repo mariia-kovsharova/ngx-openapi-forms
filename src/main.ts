@@ -38,5 +38,8 @@ export default async function main(inputFilePath: string): Promise<string[][]> {
     .map(([name, values]) => [name, normalize(values)])
     .filter(([, value]) => !!value) as Entity[];
   const nodes = normalizedEntities.map(generateAst);
-  return nodes.filter((node: BaseNode) => !node.isInterfaceNode()).map((node: BaseNode) => [makeFile(node), node.name]);
+  return nodes
+    .filter((node: BaseNode) => node.type === 'group')
+    .filter((node: BaseNode) => !node.isInterfaceNode())
+    .map((node: BaseNode) => [makeFile(node), node.name]);
 }

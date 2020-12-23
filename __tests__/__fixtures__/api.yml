@@ -16,6 +16,9 @@ paths:
           description: "Method not allowed"
 components:
   schemas:
+    PlainControl:
+      type: "string"
+      pattern: "^[a-zA-Z0-9]&"
     IBaseEntity:
       type: "object"
       properties:
