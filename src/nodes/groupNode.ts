@@ -27,6 +27,6 @@ export default class GroupNode extends BaseNode {
     return `\nconst ${name} = new FormGroup({
       ${body}
     });\n\n
-  export default { ...${name} };`;
+  export default ${name};`;
   }
 }

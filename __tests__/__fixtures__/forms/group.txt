@@ -30,4 +30,4 @@ const group = new FormGroup({
   ),
 });
 
-export default { ...group };
+export default group;

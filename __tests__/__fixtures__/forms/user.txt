@@ -41,4 +41,4 @@ const user = new FormGroup({
   ),
 });
 
-export default { ...user };
+export default user;
