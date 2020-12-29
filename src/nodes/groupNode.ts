@@ -1,13 +1,10 @@
-// TODO: fix it
-// eslint-disable-next-line import/no-cycle
-import generateAst from '../ast';
 import { Entity, EntityDescription } from '../types/swagger-types';
 import BaseNode from './baseNode';
 
 export default class GroupNode extends BaseNode {
   private children: BaseNode[];
 
-  constructor([name, value]: Entity) {
+  constructor([name, value]: Entity, childMapper: (e: Entity) => BaseNode) {
     super(name, 'group');
     const { properties, required } = value as EntityDescription;
     if (required) {
@@ -18,7 +15,7 @@ export default class GroupNode extends BaseNode {
       });
     }
     const rawChildren = Object.entries(properties) as Entity[];
-    this.children = rawChildren.map(generateAst);
+    this.children = rawChildren.map(childMapper);
   }
 
   public process(): string {

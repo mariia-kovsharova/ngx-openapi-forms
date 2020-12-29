@@ -26,6 +26,8 @@ const isOpenApiV3Document = (api: OpenAPI.Document): api is OpenAPI.Document => 
   return !!(api as OpenAPIV3.Document).openapi;
 };
 
+const isGroupNode = (node: BaseNode): boolean => node.type === 'group';
+
 export default async function main(inputFilePath: string): Promise<string[][]> {
   const api: OpenAPI.Document = await SwaggerParser.dereference(inputFilePath);
   if (!isOpenApiV3Document(api)) {
@@ -39,7 +41,7 @@ export default async function main(inputFilePath: string): Promise<string[][]> {
     .filter(([, value]) => !!value) as Entity[];
   const nodes = normalizedEntities.map(generateAst);
   return nodes
-    .filter((node: BaseNode) => node.type === 'group')
+    .filter(isGroupNode)
     .filter((node: BaseNode) => !node.isInterfaceNode())
     .map((node: BaseNode) => [makeFile(node), node.name]);
 }
