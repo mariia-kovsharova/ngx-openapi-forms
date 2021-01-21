@@ -58,23 +58,14 @@ const plainFieldTranformer = (values: EntityDescription, fn: TransformFunc): Ent
 
 const complexFieldTransformer = (values: ComplexDescription, fn: TransformFunc): EntityDescription => {
   const { allOf } = values;
-  const normalizedAllOf = allOf.reduce(
-    (acc: EntityDescription[], allOfItem: EntityDescription | ComplexDescription) => {
-      const updatedAcc = acc.slice();
-      if (isComplex(allOfItem)) {
-        const value = fn(allOfItem);
-        if (value) {
-          updatedAcc.push(value);
-        }
-      } else {
-        const plainFieldTransformed = plainFieldTranformer(allOfItem, fn);
-        updatedAcc.push(plainFieldTransformed);
-      }
-      return updatedAcc;
+  const normalizedData = allOf.reduce(
+    (acc: EntityDescription[], allOfItem: EntityDescription | ComplexDescription): EntityDescription[] => {
+      const value = isComplex(allOfItem) ? fn(allOfItem) : plainFieldTranformer(allOfItem, fn);
+      return value ? [...acc, value] : acc;
     },
     []
   );
-  return merge(normalizedAllOf);
+  return merge(normalizedData);
 };
 
 const typeDispatchers: Dispatcher[] = [
