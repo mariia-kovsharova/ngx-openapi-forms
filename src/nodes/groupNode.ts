@@ -33,7 +33,7 @@ export default class GroupNode extends BaseNode {
   private static buildInnerNode(name: string, body: string): string {
     return `${name}: new FormGroup({
         ${body}
-      }),
+      })
     `;
   }
 
