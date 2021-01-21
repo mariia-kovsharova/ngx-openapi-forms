@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Nested Props
+  description: Test
+  version: '0.1.1'
+paths:
+  /roles:
+    get:
+      responses:
+        200:
+          description: Success
+components:
+  schemas:      
+    BasedObject:
+      type: object
+      properties:
+        type:
+          type: string
+    SystemObject:
+      allOf:
+        - $ref: '#/components/schemas/BasedObject'
+        - type: 'object'
+          properties:
+            isFolder:
+              type: boolean
+    DocumentInfo:
+      allOf:
+        - $ref: '#/components/schemas/SystemObject'
+        - type: 'object'
+          properties:
+            isDeleted:
+              type: boolean
+              readOnly: true
+            content:
+              $ref: '#/components/schemas/FileInfo'
+    FileInfo:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BasedObject'
+        - type: object
+          properties:
+            mimeType:
+              type: string

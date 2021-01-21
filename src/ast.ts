@@ -4,13 +4,13 @@ import BaseNode from './nodes/baseNode';
 import ControlNode from './nodes/controlNode';
 import GroupNode from './nodes/groupNode';
 
-type nodeConstructor = (e: Entity) => BaseNode;
+type nodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
 
-const ast = (entity: Entity): BaseNode => {
-  const entityMapper = (type: string): nodeConstructor => (e: Entity): BaseNode => {
+const ast = (entity: Entity, parent?: BaseNode): BaseNode => {
+  const entityMapper = (type: string): nodeConstructor => (e: Entity, p?: BaseNode): BaseNode => {
     switch (type) {
       case 'object':
-        return new GroupNode(e, ast);
+        return new GroupNode(e, ast, p);
       case 'array':
         return new ArrayNode(e);
       case 'string':
@@ -27,7 +27,7 @@ const ast = (entity: Entity): BaseNode => {
   }
   const [, value] = entity;
   const { type } = value as EntityDescription;
-  return entityMapper(type)(entity);
+  return entityMapper(type)(entity, parent);
 };
 
 export default ast;

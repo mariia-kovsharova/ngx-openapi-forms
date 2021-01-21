@@ -1,0 +1,22 @@
+/* tslint:disable */
+/* eslint-disable */
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const systemObject = new FormGroup({
+  type: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+  isFolder: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+});
+
+export default systemObject;

@@ -15,6 +15,7 @@ describe('Test creating Reactive Angular Form files from open-api descriptions',
   const formsFilesDirPath = path.join(fixturesPath, 'forms');
   apiFiles.push({ filepath: path.join(fixturesPath, 'api.json') });
   apiFiles.push({ filepath: path.join(fixturesPath, 'api.yml') });
+  apiFiles.push({ filepath: path.join(fixturesPath, 'nestedApi.yml') });
   let formsMap = new Map<string, string>();
 
   const readFileContent = async (fileName: string): Promise<string> => {
@@ -35,8 +36,8 @@ describe('Test creating Reactive Angular Form files from open-api descriptions',
   });
 
   apiFiles.forEach(({ filepath, extraDescription }) => {
-    const { ext } = path.parse(filepath);
-    it(`should generate forms from ${ext} open-api file. ${extraDescription ?? ''}`, async () => {
+    const { name, ext } = path.parse(filepath);
+    it(`should generate forms from ${name}${ext} open-api file. ${extraDescription ?? ''}`, async () => {
       const models = await generateFiles(filepath);
       models.forEach(([file, fileName]) => {
         const expectedData = formsMap.get(camelcase(fileName));

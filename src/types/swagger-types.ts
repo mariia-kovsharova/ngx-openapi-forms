@@ -11,11 +11,12 @@ export type EntityProperty = {
   required?: boolean;
 };
 
-export type EntityField = { [key: string]: EntityProperty };
+/* eslint-disable */
+export type EntityField = { [key: string]: EntityProperty | EntityDescription };
 
 export type EntityDescription = {
   type: string;
-  properties: EntityField;
+  properties?: EntityField;
   required?: string[];
 };
 
@@ -23,4 +24,6 @@ export type ComplexDescription = {
   allOf: (EntityDescription | ComplexDescription)[];
 };
 
-export type Entity = [string, ComplexDescription | EntityDescription | EntityField];
+type EntityValue = ComplexDescription | EntityDescription | EntityField;
+
+export type Entity = [string, EntityValue];

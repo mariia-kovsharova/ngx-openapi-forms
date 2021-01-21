@@ -72,8 +72,34 @@ Group:
               type: "string"
           xml:
             name: "Group"
+            
+SystemObject:
+      allOf:
+        - $ref: '#/components/schemas/IBaseEntity'
+        - type: 'object'
+          properties:
+            isFolder:
+              type: boolean
+DocumentInfo:
+      allOf:
+        - $ref: '#/components/schemas/SystemObject'
+        - type: 'object'
+          properties:
+            isDeleted:
+              type: boolean
+              readOnly: true
+            content:
+              $ref: '#/components/schemas/FileInfo'
+FileInfo:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/IBaseEntity'
+        - type: object
+          properties:
+            mimeType:
+              type: string            
 ```
-The lib will generate Reactive forms for **User** and **Group** openapi-models. **PlainProperty** is not a FormGroup, **IBaseEntity** is an interface or abstract class for classes.
+The lib will generate Reactive forms for **User**, **Group**, **SystemObject**, **FileInfo** and **DocumentInfo** openapi-models. **PlainProperty** is not a FormGroup, **IBaseEntity** is an interface or abstract class for classes.
 Generated multiply files:
 
 **user.ts**
@@ -158,4 +184,54 @@ const group = new FormGroup({
 });
 
 export default group;
+```
+In case of the DocumentInfo model, the nested entity "content" is used as one of the properties in the model.
+The lib will generate a nested FormGroup:
+
+**documentInfo.ts**
+
+```
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const documentInfo = new FormGroup({
+  type: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+  isFolder: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [],
+  ),
+  isDeleted: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    [],
+  ),
+  content: new FormGroup({
+    type: new FormControl(
+      {
+        value: null,
+        disabled: false,
+      },
+      [],
+    ),
+    mimeType: new FormControl(
+      {
+        value: null,
+        disabled: false,
+      },
+      [],
+    ),
+  }),
+});
+
+export default documentInfo;
 ```
