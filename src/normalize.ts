@@ -9,9 +9,9 @@ type Dispatcher = {
   transform: (values: EntityType, transformFn: TransformFunc) => EntityDescription | null;
 };
 
-const plainTypes = ['string', 'boolean', 'integer', 'number'];
+const primitiveSwaggerTypes = ['string', 'boolean', 'integer', 'number'];
 
-const isPrimitive = (values: EntityProperty) => plainTypes.includes(values.type);
+const isPrimitive = (values: EntityProperty) => primitiveSwaggerTypes.includes(values.type);
 
 const isComplex = (values: EntityType): values is ComplexDescription =>
   Object.prototype.hasOwnProperty.call(values, 'allOf');
@@ -21,12 +21,12 @@ const isPlain = (values: EntityType): values is EntityDescription =>
 
 const isEnum = (values: EntityType): boolean => Object.prototype.hasOwnProperty.call(values, 'enum');
 
-const merge = (props: EntityDescription[]): EntityDescription => {
-  const required = props.reduce((acc: string[], { required: innerReq }: EntityDescription) => {
+const mergeProperties = (initialProperties: EntityDescription[]): EntityDescription => {
+  const required = initialProperties.reduce((acc: string[], { required: innerReq }: EntityDescription) => {
     const value = innerReq ?? [];
     return [...acc, ...value];
   }, []);
-  const properties = props.reduce(
+  const properties = initialProperties.reduce(
     (acc: EntityField, { properties: innerProp }: EntityDescription) => ({ ...acc, ...innerProp }),
     {}
   );
@@ -38,22 +38,21 @@ const merge = (props: EntityDescription[]): EntityDescription => {
 };
 
 const plainFieldTranformer = (values: EntityDescription, fn: TransformFunc): EntityDescription => {
-  const { properties } = values;
-  if (!properties) {
+  const { properties: initialProperties } = values;
+  if (!initialProperties) {
     throw new Error(`Object type field can not have properties, field type: ${values.type}`);
   }
-  const propertyKeys = Object.keys(properties);
-  const processedProperties = propertyKeys.reduce((acc: EntityField, currentPropKey: string): EntityField => {
-    const property = properties[currentPropKey];
+  const proprertyNames = Object.keys(initialProperties);
+  const properties = proprertyNames.reduce((processedField: EntityField, propertyName: string): EntityField => {
+    const initialProperty = initialProperties[propertyName];
     // TODO: how to check it with isComplex predicate?
-    if ('allOf' in property) {
-      const flatted = fn(property);
-      return { ...acc, [currentPropKey]: flatted ?? property };
+    if ('allOf' in initialProperty) {
+      const flatted = fn(initialProperty);
+      return { ...processedField, [propertyName]: flatted ?? initialProperty };
     }
-    return { ...acc, [currentPropKey]: property };
+    return { ...processedField, [propertyName]: initialProperty };
   }, {});
-  const copiedValues = { ...values, properties: processedProperties } as EntityDescription;
-  return copiedValues;
+  return { ...values, properties };
 };
 
 const complexFieldTransformer = (values: ComplexDescription, fn: TransformFunc): EntityDescription => {
@@ -65,17 +64,13 @@ const complexFieldTransformer = (values: ComplexDescription, fn: TransformFunc):
     },
     []
   );
-  return merge(normalizedData);
+  return mergeProperties(normalizedData);
 };
 
 const typeDispatchers: Dispatcher[] = [
   {
-    check: (values: EntityType) => isPrimitive(values as EntityProperty),
+    check: (values: EntityType) => isPrimitive(values as EntityProperty) || isEnum(values),
     transform: (_values: EntityType, _fn: TransformFunc) => null,
-  },
-  {
-    check: (values: EntityType) => isEnum(values),
-    transform: (_values: EntityType) => null,
   },
   {
     check: (values: EntityType) => isComplex(values),
@@ -88,9 +83,9 @@ const typeDispatchers: Dispatcher[] = [
 ];
 
 const normalize = (values: EntityType): EntityDescription | null => {
-  const rule: Dispatcher | undefined = typeDispatchers.find(({ check }) => check(values));
-  if (rule) {
-    const { transform } = rule;
+  const transformationRule: Dispatcher | undefined = typeDispatchers.find(({ check }) => check(values));
+  if (transformationRule) {
+    const { transform } = transformationRule;
     return transform(values, normalize);
   }
   throw new Error(`Unknown type of entity: ${JSON.stringify(values)}`);

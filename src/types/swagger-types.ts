@@ -1,3 +1,5 @@
+export type DefaultProperty = string | number | boolean | null;
+
 export type EntityProperty = {
   type: string;
   format?: string;
@@ -9,6 +11,7 @@ export type EntityProperty = {
   minLength?: number;
   maxLength?: number;
   required?: boolean;
+  default?: DefaultProperty;
 };
 
 /* eslint-disable */

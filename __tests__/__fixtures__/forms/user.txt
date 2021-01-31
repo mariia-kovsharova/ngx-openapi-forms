@@ -34,7 +34,7 @@ const user = new FormGroup({
   roles: new FormArray([]),
   active: new FormControl(
     {
-      value: null,
+      value: false,
       disabled: false,
     },
     [Validators.required],

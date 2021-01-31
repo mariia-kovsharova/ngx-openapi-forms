@@ -10,7 +10,7 @@ This is an npm-cli library that allows you to generate Angular Reactive Forms fo
 ### Usage
 1. In terminal type `angular-openapi-form-gen --input <path-to-openapi> --output <output-dir-path>`. All params are required.
 2. The lib will parse your open-api file than create one file per top-level model of "object" type in the description.
-3. The created `model.ts` file will contain exported as default Angular FormGroup with FormControls and FormArrays from the open-api model, including validation.
+3. The created `model.ts` file will contain Angular FormGroup with FormControls and FormArrays (exported as default) from the open-api model, including validation and default values.
 
 ### Important note
 You should import a deep copy of the generated FormGroup object to avoid unexpected behavior.
@@ -22,34 +22,34 @@ OpenApi entities:
 
 ```
 PlainProperty:
-      type: "string"
+      type: string
 
 IBaseEntity:
-      type: "object"
+      type: object
       properties:
         objectId:
-          type: "string"
+          type: string
           readOnly: true
 
 User:
       allOf:
         - $ref: "#/components/schemas/IBaseEntity"
-        - type: "object"
+        - type: object
           properties:
             login:
-              type: "string"
+              type: string
               pattern: "^[a-zA-Z]&"
             address:
-              type: "string"
+              type: string
               format: "email"
             description:
-              type: "string"
+              type: string
             roles:
-              type: "array"
+              type: array
               items:
                 $ref: "#/components/schemas/Roles"
             active:
-              type: "boolean"
+              type: boolean
               default: false
           required:
             - login
@@ -61,29 +61,30 @@ User:
 Group:
       allOf:
         - $ref: "#/components/schemas/IBaseEntity"
-        - type: "object"
+        - type: object
           properties:
             name:
-              type: "string"
+              type: string
               pattern: "^[a-zA-Z0-9]&"
               minLength: 5
               maxLength: 20
             description:
-              type: "string"
+              type: string
           xml:
             name: "Group"
             
 SystemObject:
       allOf:
         - $ref: '#/components/schemas/IBaseEntity'
-        - type: 'object'
+        - type: object
           properties:
             isFolder:
               type: boolean
+              default: false
 DocumentInfo:
       allOf:
         - $ref: '#/components/schemas/SystemObject'
-        - type: 'object'
+        - type: object
           properties:
             isDeleted:
               type: boolean
@@ -100,7 +101,7 @@ FileInfo:
               type: string            
 ```
 The lib will generate Reactive forms for **User**, **Group**, **SystemObject**, **FileInfo** and **DocumentInfo** openapi-models. **PlainProperty** is not a FormGroup, **IBaseEntity** is an interface or abstract class for classes.
-Generated multiply files:
+Examples of generated multiply files:
 
 **user.ts**
 
@@ -139,7 +140,7 @@ const user = new FormGroup({
   roles: new FormArray([]),
   active: new FormControl(
     {
-      value: null,
+      value: false,
       disabled: false,
     },
     [Validators.required],
@@ -203,7 +204,7 @@ const documentInfo = new FormGroup({
   ),
   isFolder: new FormControl(
     {
-      value: null,
+      value: false,
       disabled: false,
     },
     [],
@@ -225,7 +226,7 @@ const documentInfo = new FormGroup({
     ),
     mimeType: new FormControl(
       {
-        value: null,
+        value: 'application/json',
         disabled: false,
       },
       [],

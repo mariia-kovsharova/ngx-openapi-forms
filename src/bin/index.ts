@@ -8,7 +8,7 @@ import generateForms from '../main';
 
 commander
   .description('Generates Angular Reactive Forms from openapi yaml/json file to output dir')
-  .version('0.0.3')
+  .version('1.0.0')
   .option('-i, --input', 'Input path to openapi file')
   .option('-o, --output', 'Output path to dir where generated forms will be created')
   .arguments('<input> <output>')

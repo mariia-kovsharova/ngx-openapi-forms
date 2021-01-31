@@ -23,6 +23,7 @@ components:
           properties:
             isFolder:
               type: boolean
+              default: false
     DocumentInfo:
       allOf:
         - $ref: '#/components/schemas/SystemObject'
@@ -41,3 +42,4 @@ components:
           properties:
             mimeType:
               type: string
+              default: 'application/json'

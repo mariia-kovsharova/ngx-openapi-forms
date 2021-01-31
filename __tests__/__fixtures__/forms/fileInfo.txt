@@ -12,7 +12,7 @@ const fileInfo = new FormGroup({
   ),
   mimeType: new FormControl(
     {
-      value: null,
+      value: 'application/json',
       disabled: false,
     },
     [],

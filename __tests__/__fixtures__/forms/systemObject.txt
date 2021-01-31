@@ -12,7 +12,7 @@ const systemObject = new FormGroup({
   ),
   isFolder: new FormControl(
     {
-      value: null,
+      value: false,
       disabled: false,
     },
     [],
