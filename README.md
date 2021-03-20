@@ -21,218 +21,87 @@ For expample, use *cloneDeep* method from [lodash](https://lodash.com/docs)
 OpenApi entities:
 
 ```
-PlainProperty:
+IPet:
+  type: object
+  properties:
+    id:
       type: string
+      format: uuid
+      readOnly: true
+    kind:
+      type: string
+  required:
+    - kind
 
-IBaseEntity:
-      type: object
+Cat:
+  allOf:
+    - $ref: "#/components/schemas/IPet"
+    - type: object
       properties:
-        objectId:
+        tail:
+          type: boolean
+          default: true
+        name:
           type: string
-          readOnly: true
-
-User:
-      allOf:
-        - $ref: "#/components/schemas/IBaseEntity"
-        - type: object
-          properties:
-            login:
-              type: string
-              pattern: "^[a-zA-Z]&"
-            address:
-              type: string
-              format: "email"
-            description:
-              type: string
-            roles:
-              type: array
-              items:
-                $ref: "#/components/schemas/Roles"
-            active:
-              type: boolean
-              default: false
-          required:
-            - login
-            - address
-            - active
-          xml:
-            name: "User"
-
-Group:
-      allOf:
-        - $ref: "#/components/schemas/IBaseEntity"
-        - type: object
-          properties:
-            name:
-              type: string
-              pattern: "^[a-zA-Z0-9]&"
-              minLength: 5
-              maxLength: 20
-            description:
-              type: string
-          xml:
-            name: "Group"
+          pattern: "^[a-zA-Z]&"
+      required:
+        - tail
+        - name
+    
+Dog:
+  allOf:
+    - $ref: "#/components/schemas/IPet"
+    - type: object
+      properties:
+        tail:
+          type: boolean
+          default: true
+        barks:
+          type: boolean
+          default: true
+        name:
+          type: string
+          pattern: "^[a-zA-Z]&"
+          default: "Bob"
+      required:
+        - tail
+        - name
+    
+Fish:
+  allOf:
+    - $ref: "#/components/schemas/IPet"
+    - type: object
+      properties:
+        color:
+          type: string
+      required:
+        - color
             
-SystemObject:
-      allOf:
-        - $ref: '#/components/schemas/IBaseEntity'
-        - type: object
-          properties:
-            isFolder:
-              type: boolean
-              default: false
-DocumentInfo:
-      allOf:
-        - $ref: '#/components/schemas/SystemObject'
-        - type: object
-          properties:
-            isDeleted:
-              type: boolean
-              readOnly: true
-            content:
-              $ref: '#/components/schemas/FileInfo'
-FileInfo:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/IBaseEntity'
-        - type: object
-          properties:
-            mimeType:
-              type: string            
+    
+IAquarium:
+  type: object
+  properties:
+    shape:
+      type: string
+      default: "round"
+    background:
+      type: string
+      default: "transparent"
+    
+Aquarium:
+  type: object
+  properties:
+    features:
+      $ref: "#/components/schemas/IAquarium"
+    fishes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Fish" 
 ```
-The lib will generate Reactive forms for **User**, **Group**, **SystemObject**, **FileInfo** and **DocumentInfo** openapi-models. **PlainProperty** is not a FormGroup, **IBaseEntity** is an interface or abstract class for classes.
+The lib will generate Reactive forms for **Cat**, **Dog**, **Fish** and **Aquarium** openapi-models.
+**PlainProperty** is not a FormGroup, **IPet** and **IAquarium** are interfaces or abstract classes.
 Examples of generated multiply files:
 
-**user.ts**
 
-```
-import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-
-const user = new FormGroup({
-  objectId: new FormControl(
-    {
-      value: null,
-      disabled: true,
-    },
-    [],
-  ),
-  login: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [Validators.pattern(/^[a-zA-Z]&/), Validators.required],
-  ),
-  address: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [Validators.email, Validators.required],
-  ),
-  description: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [],
-  ),
-  roles: new FormArray([]),
-  active: new FormControl(
-    {
-      value: false,
-      disabled: false,
-    },
-    [Validators.required],
-  ),
-});
-
-export default user;
-
-```
-
-**group.ts**
-
-```
-import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-
-const group = new FormGroup({
-  objectId: new FormControl(
-    {
-      value: null,
-      disabled: true,
-    },
-    [],
-  ),
-  name: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [
-      Validators.pattern(/^[a-zA-Z0-9]&/),
-      Validators.minLength(5),
-      Validators.maxLength(20),
-    ],
-  ),
-  description: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [],
-  ),
-});
-
-export default group;
-```
-In case of the DocumentInfo model, the nested entity "content" is used as one of the properties in the model.
+In case of the **Aquarium** model, the nested entity "features" is used as one of the properties in the model.
 The lib will generate a nested FormGroup:
-
-**documentInfo.ts**
-
-```
-import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-
-const documentInfo = new FormGroup({
-  type: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [],
-  ),
-  isFolder: new FormControl(
-    {
-      value: false,
-      disabled: false,
-    },
-    [],
-  ),
-  isDeleted: new FormControl(
-    {
-      value: null,
-      disabled: true,
-    },
-    [],
-  ),
-  content: new FormGroup({
-    type: new FormControl(
-      {
-        value: null,
-        disabled: false,
-      },
-      [],
-    ),
-    mimeType: new FormControl(
-      {
-        value: 'application/json',
-        disabled: false,
-      },
-      [],
-    ),
-  }),
-});
-
-export default documentInfo;
-```

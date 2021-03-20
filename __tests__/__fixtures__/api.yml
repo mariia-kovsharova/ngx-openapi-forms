@@ -4,11 +4,11 @@ info:
   version: "1.0.0"
   title: "Test OpenApi Data"
 paths:
-  /users:
+  /pets:
     get:
       tags:
-        - "users"
-      description: "Get list of users"
+        - "pets"
+      description: "Get list of pets"
       responses:
         "200":
           description: "OK"
@@ -16,106 +16,85 @@ paths:
           description: "Method not allowed"
 components:
   schemas:
-    PlainControl:
-      type: string
-      pattern: "^[a-zA-Z0-9]&"
-    IBaseEntity:
+    IPet:
       type: object
       properties:
-        objectId:
+        id:
           type: string
+          format: uuid
           readOnly: true
+        kind:
+          type: string
+      required:
+          - kind
 
-    IBaseCardEntity:
+    Cat:
       allOf:
-        - $ref: "#/components/schemas/IBaseEntity"
+        - $ref: "#/components/schemas/IPet"
         - type: object
           properties:
-            modifyDate:
-              type: string
-              format: "date-time"
-              readOnly: true
-    User:
-      allOf:
-        - $ref: "#/components/schemas/IBaseEntity"
-        - type: object
-          properties:
-            login:
+            tail:
+              type: boolean
+              default: true
+            name:
               type: string
               pattern: "^[a-zA-Z]&"
-            address:
-              type: string
-              format: "email"
-            description:
-              type: string
-            roles:
-              type: array
-              items:
-                $ref: "#/components/schemas/Roles"
-            active:
-              type: boolean
-              default: false
           required:
-            - login
-            - address
-            - active
-          xml:
-            name: "User"
-    UserCard:
-      allOf:
-        - $ref: "#/components/schemas/IBaseCardEntity"
-        - $ref: "#/components/schemas/User"
-        - type: object
-          properties:
-            password:
-              type: string
-            name:
-              type: string
-          required:
+            - tail
             - name
-          xml:
-            name: "UserCard"
-    Group:
+    
+    Dog:
       allOf:
-        - $ref: "#/components/schemas/IBaseEntity"
+        - $ref: "#/components/schemas/IPet"
         - type: object
           properties:
+            tail:
+              type: boolean
+              default: true
+            barks:
+              type: boolean
+              default: true
             name:
               type: string
-              pattern: "^[a-zA-Z0-9]&"
-              minLength: 5
-              maxLength: 20
-            description:
-              type: string
-          xml:
-            name: "Group"
-    GroupCard:
+              pattern: "^[a-zA-Z]&"
+              default: "Bob"
+          required:
+            - tail
+            - name
+    
+    Fish:
       allOf:
-        - $ref: "#/components/schemas/IBaseCardEntity"
-        - $ref: "#/components/schemas/Group"
+        - $ref: "#/components/schemas/IPet"
         - type: object
           properties:
-            users:
-              type: array
-              items:
-                $ref: "#/components/schemas/User"
-            childGroups:
-              type: array
-              items:
-                $ref: "#/components/schemas/Group"
-            parentGroups:
-              type: array
-              items:
-                $ref: "#/components/schemas/Group"
-            address:
+            color:
               type: string
-              format: "email"
-          xml:
-            name: "GroupCard"
-    Roles:
-      type: string
-      enum:
-        - admin
-        - user
-      xml:
-        name: "Roles"
+          required:
+            - color
+            
+    
+    IAquarium:
+      type: object
+      properties:
+        shape:
+          type: string
+          default: "round"
+        background:
+          type: string
+          default: "transparent"
+    
+    Aquarium:
+      type: object
+      properties:
+        features:
+          $ref: "#/components/schemas/IAquarium"
+        fishes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Fish"
+        lights:
+          type: number
+          minimum: 1
+          maximum: 5
+          
+      

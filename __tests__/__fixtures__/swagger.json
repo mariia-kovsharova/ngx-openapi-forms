@@ -7,12 +7,12 @@
     "title": "Test OpenApi2 Data"
   },
   "paths": {
-    "/users": {
+    "/pets": {
       "get": {
         "tags": [
-          "users"
+          "pets"
         ],
-        "description": "Get list of users",
+        "description": "Get list of pets",
         "responses": {
           "200": {
             "description": "OK"

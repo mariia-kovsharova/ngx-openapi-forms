@@ -2,13 +2,22 @@
 /* eslint-disable */
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
-const group = new FormGroup({
-  objectId: new FormControl(
+const cat = new FormGroup({
+  id: new FormControl(
     {
       value: null,
       disabled: true,
     },
     [],
+  ),
+  kind: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [
+      Validators.required
+    ],
   ),
   name: new FormControl(
     {
@@ -16,17 +25,9 @@ const group = new FormGroup({
       disabled: false,
     },
     [
-      Validators.pattern(/^[a-zA-Z0-9]&/),
-      Validators.minLength(5),
-      Validators.maxLength(20),
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9]&/)
     ],
-  ),
-  description: new FormControl(
-    {
-      value: null,
-      disabled: false,
-    },
-    [],
   ),
 });
 

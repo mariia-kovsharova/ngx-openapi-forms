@@ -1,4 +1,4 @@
-const ruleMapper = [
+const mapper = [
   {
     check: (name: string) => name === 'format',
     process: (value: unknown) => (value === 'email' ? 'Validators.email' : ''),
@@ -30,10 +30,10 @@ const ruleMapper = [
 ];
 
 export default ([key, value]: [string, unknown]): string => {
-  const ruleProcess = ruleMapper.find(({ check }) => check(key));
-  if (!ruleProcess) {
+  const rule = mapper.find(({ check }) => check(key));
+  if (!rule) {
     return '';
   }
-  const { process } = ruleProcess;
+  const { process } = rule;
   return process(value);
 };
