@@ -1,18 +1,17 @@
-import { Entity, EntityProperty, DefaultProperty } from '../types/swagger-types';
+import { SwaggerEntity, SwaggerPlainDefinition, DefaultValueType } from '../contracts/ngx-openapi-types';
 import getRule from '../validation/rules';
 import BaseNode from './baseNode';
 
 type NonNullValue<T> = T extends null ? never : T;
 
 export default class ControlNode extends BaseNode {
-  public validationRules?: string[];
 
-  public disabled = false;
+  private readonly disabled: boolean;
+  private readonly defaultValue: DefaultValueType;
+  private readonly validators?: ReadonlyArray<string>;
 
-  public defaultValue: DefaultProperty;
-
+  // TODO: ugly
   private static transformDefaultValue<T>(value: T): NonNullValue<T>;
-
   private static transformDefaultValue<T>(value: T): string | T {
     if (value === null) {
       return 'null';
@@ -23,25 +22,24 @@ export default class ControlNode extends BaseNode {
     return value;
   }
 
-  constructor([name, value]: Entity) {
+  constructor([name, value]: SwaggerEntity) {
     super(name, 'control');
-    const properties = value as EntityProperty;
+
+    const properties = value as SwaggerPlainDefinition;
     const rules = Object.entries(properties);
-    this.validationRules = rules.map(getRule).filter(Boolean);
+    this.validators = rules.map(getRule).filter(Boolean);
     this.disabled = Object.prototype.hasOwnProperty.call(properties, 'readOnly');
     this.defaultValue = properties.default ?? null;
   }
 
-  public getValidationRules(): string {
-    return this.validationRules?.join(', ') ?? '';
-  }
-
-  public process(): string {
+  public build(): string {
     const { defaultValue } = this;
+
     const transformedValue = ControlNode.transformDefaultValue(defaultValue);
+
     return `${this.name}: new FormControl({
       value: ${transformedValue.toString()},
       disabled: ${this.disabled.toString()},
-    }, [${this.getValidationRules()}])`;
+    }, [${this.validators?.join(',') ?? ''}])`;
   }
 }

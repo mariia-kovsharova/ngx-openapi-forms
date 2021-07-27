@@ -1,0 +1,40 @@
+{
+    "Nested": {
+        "type": "object",
+        "properties": {
+            "foo": {
+                "type": "string",
+                "pattern": "^[123]&"
+            },
+            "id": {
+                "type": "string",
+                "format": "uuid",
+                "readOnly": true
+            },
+            "kind": {
+                "type": "string"
+            },
+            "tail": {
+                "type": "boolean",
+                "default": true
+            },
+            "barks": {
+                "type": "boolean",
+                "default": true
+            },
+            "name": {
+                "type": "string",
+                "pattern": "^[a-zA-Z]&",
+                "default": "Bob"
+            },
+            "baz": {
+                "type": "string"
+            }
+        },
+        "requiredFields": [
+            "kind",
+            "tail",
+            "name"
+        ]
+    }
+}

@@ -1,29 +1,29 @@
-import SwaggerParser from '@apidevtools/swagger-parser';
-import { OpenAPI, OpenAPIV3 } from 'openapi-types';
+import { OpenAPIV3 } from 'openapi-types';
 import BaseNode from 'nodes/baseNode';
 import prettier from 'prettier';
-import { Entity } from 'types/swagger-types';
-import generateAst from './ast';
-import normalize from './normalize';
-import { GeneratorMode } from 'contracts';
-import GroupNode from 'nodes/groupNode';
+import normalize from './services/normalize';
+import { IGeneratedFile } from './contracts/ngx-openapi-gen';
+import { isNil } from './services/utils';
+import { ObjectDefinition } from './contracts/ngx-openapi-types';
+import adapt from '../src/services/types-adapter';
 
-const generateReactiveHeader = (): string => {
+interface IEntity {
+  name: string;
+  value: ObjectDefinition | null
+}
+
+const buildImports = (): string => {
   return `
   /* tslint:disable */
   /* eslint-disable */
   import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';`;
 };
 
-export const generateHtml = (node: BaseNode): string => {
-  const text = '';
-  return prettier.format(text, {
-    parser: 'html'
-  });
-};
+const buildFileContent = (node: BaseNode): string => {
+  const imports = buildImports();
+  const body = node.build();
+  const text = `${imports}\n${body}`;
 
-export const generateReactive = (node: BaseNode): string => {
-  const text = `${generateReactiveHeader()}\n${node.process()}`;
   return prettier.format(text, {
     parser: 'typescript',
     singleQuote: true,
@@ -31,38 +31,26 @@ export const generateReactive = (node: BaseNode): string => {
   });
 };
 
-const isOpenApiV3Document = (api: OpenAPI.Document): api is OpenAPI.Document => {
-  return !!(api as OpenAPIV3.Document).openapi;
-};
-
-const isGroupNode = (node: BaseNode): boolean => node.type === 'group';
-
-const getGenerator = (mode: GeneratorMode): { generate: (n: BaseNode) => string } => {
-  switch (mode) {
-    case 'reactive':
-      return { generate: generateReactive };
-    case 'html':
-      return { generate: generateHtml };
-    default:
-      throw new Error(`Unknown mode: ${mode}`);
-  }
-}
-
-export default async function main(inputFilePath: string, mode: GeneratorMode): Promise<string[][]> {
-  const api: OpenAPI.Document = await SwaggerParser.dereference(inputFilePath);
-  if (!isOpenApiV3Document(api)) {
-    throw new Error('Current version of library supports only OpenApi versions 3.0 and above.');
-  }
-  const { components } = api as OpenAPIV3.Document;
+export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedFile> {
+  const { components } = api;
   const schemas = components?.schemas ?? {};
-  const entities = Object.entries(schemas) as Entity[];
-  const normalizedEntities = entities
-    .map(([name, values]) => [name, normalize(values)])
-    .filter(([, value]) => !!value) as Entity[];
-  const nodes = normalizedEntities.map((entity: Entity) => generateAst(entity));
-  const generator: (node: BaseNode) => string = getGenerator(mode);
-  return nodes
-    .filter(isGroupNode)
-    .filter((node: BaseNode) => !node.isInterfaceNode())
-    .map((node: BaseNode) => [node.name, generator.generate(node)]);
+  const entities = Object.entries(schemas)
+    .map(([name, value]) => {
+      return {
+        name,
+        value: value as OpenAPIV3.SchemaObject
+      };
+    });
+
+  return entities
+    .map(({ name, value }) => ({ name, value: adapt(value) }))
+    .map(({ name, value }) => ({ name, value: normalize(value) }))
+    .filter(({ value }) => !isNil(value))
+
+    .map(entity => createNode(entity))
+    .filter(node => node.isFormGroup() && !node.isInterfaceNode())
+    .map(node => ({
+      name: node.getName(),
+      content: buildFileContent(node)
+    }));
 }

@@ -1,13 +1,13 @@
-import { Entity } from '../types/swagger-types';
+import { SwaggerEntity } from '../contracts/ngx-openapi-types';
 import BaseNode from './baseNode';
 
 export default class ArrayNode extends BaseNode {
-  constructor([name, _value]: Entity) {
+
+  constructor([name, _value]: SwaggerEntity) {
     super(name, 'array');
   }
 
-  public process(): string {
-    const name = this.getName();
-    return `${name}: new FormArray([])`;
+  public build(): string {
+    return `${this.name}: new FormArray([])`;
   }
 }

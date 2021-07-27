@@ -1,0 +1,69 @@
+{
+    "Nested": {
+        "allOf": [
+            {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "type": "string",
+                        "pattern": "^[123]&"
+                    }
+                }
+            },
+            {
+                "allOf": [
+                    {
+                        "allOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "readOnly": true
+                                    },
+                                    "kind": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "kind"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "tail": {
+                                        "type": "boolean",
+                                        "default": true
+                                    },
+                                    "barks": {
+                                        "type": "boolean",
+                                        "default": true
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z]&",
+                                        "default": "Bob"
+                                    }
+                                },
+                                "required": [
+                                    "tail",
+                                    "name"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "baz": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

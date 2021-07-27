@@ -1,24 +1,33 @@
 import camelcase from 'camelcase';
 
-type nodeTypes = 'control' | 'array' | 'group';
+type FormNodeType = 'control' | 'array' | 'group';
 
 export default abstract class BaseNode {
-  public name: string;
 
-  public type: nodeTypes;
+  private readonly _name: string;
+  private readonly _type: FormNodeType;
 
-  constructor(name: string, type: nodeTypes) {
-    this.name = name;
-    this.type = type;
+  constructor(name: string, type: FormNodeType) {
+    this._name = camelcase(name);
+    this._type = type;
   }
 
-  public getName(): string {
-    return camelcase(this.name);
+  protected get name(): string {
+    return this._name;
   }
 
+  protected get type(): FormNodeType {
+    return this._type;
+  }
+
+  public isFormGroup(): boolean {
+    return this._type === 'group';
+  }
+
+  // TODO: по-другому как-то сделать?
   public isInterfaceNode(): boolean {
-    return this.getName().startsWith('i');
+    return this.name.startsWith('i');
   }
 
-  public abstract process(): string;
+  public abstract build(): string;
 }
