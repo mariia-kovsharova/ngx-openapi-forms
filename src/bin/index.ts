@@ -1,37 +1,46 @@
 #!/usr/bin/env node
-import { GeneratorMode } from 'contracts';
-import commander from 'commander';
+import { program } from 'commander';
 import { promises as fs } from 'fs';
-import camelcase from 'camelcase';
 import path from 'path';
 import generate from '../main';
+import { OpenAPI, OpenAPIV3 } from 'openapi-types';
+import SwaggerParser from '@apidevtools/swagger-parser';
+import { IGeneratedFile } from '../contracts/ngx-openapi-gen';
 
-commander
-  .description('Generates Angular Reactive Forms or HTML parts from openapi yaml/json file to output dir')
-  .version('1.0.0')
+const isOpenApiV3Document = (api: OpenAPI.Document): api is OpenAPIV3.Document => {
+  return !!(api as OpenAPIV3.Document).openapi;
+};
+
+program
+  .description('Generates Angular Reactive Forms templates from openapi yaml/json file to output dir')
+  .version('2.0.0')
   .option('-i, --input', 'Path to openapi file')
   .option('-o, --output', 'Path to dir for output files')
-  .option('-m, --mode [type]', `Change mode to generate templates. Default value is "reactive".
-                                Possible values:
-                                  - "reactive" - generates .ts files with FormGroup
-                                  - "html" - generate .html file as partial templates for copy-paste into your template`)
   .arguments('<input> <output>')
-  .action(async (input: string, output: string, mode: GeneratorMode = 'reactive') => {
+  .action(async (inputFilePath: string, outputFilePath: string) => {
     try {
-      const writeFile = async (fileName: string, file: string): Promise<void> => {
-        const name = `${camelcase(fileName)}.ts`;
-        const fullPath = path.join(output, name);
-        await fs.writeFile(fullPath, file, { encoding: 'utf-8' });
+      const writeFile = async ({ name, content }: IGeneratedFile): Promise<void> => {
+        const fullName = `${name}.ts`;
+        const fullPath = path.join(outputFilePath, fullName);
+        await fs.writeFile(fullPath, content, { encoding: 'utf-8' });
       };
-      const files = await generate(input, mode);
-      await fs.mkdir(output, { recursive: true });
-      const promises = files.map(([fileName, file]) => writeFile(file, fileName));
-      await Promise.all(promises);
+
+      const api = await SwaggerParser.dereference(inputFilePath);
+
+      if (!isOpenApiV3Document(api)) {
+        throw new Error('Current version of library supports only OpenApi versions 3.0 and above.');
+      }
+
+      const files = generate(api);
+
+      await fs.mkdir(outputFilePath, { recursive: true });
+      await Promise.all(files.map(writeFile));
+
       // eslint-disable-next-line no-console
-      console.log(`Generating files successfully completed. Files created at path: ${output} (click to open)`);
-    } catch (e: unknown) {
+      console.log(`Generating files successfully completed. Files created at path: ${outputFilePath} (click link to open)`);
+    } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Something went wrong: %s', e);
+      console.error('Something went wrong: %s', error);
     }
   })
   .parse(process.argv);
