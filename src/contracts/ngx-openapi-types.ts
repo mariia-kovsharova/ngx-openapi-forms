@@ -49,7 +49,7 @@ export type MergedDefinition = Definition & {
 export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition | MergedDefinition;
 
 export type Property = {
-  [name: string]: Schema
+  [name: string]: Exclude<Schema, ArrayDefinition>
 }
 
 export interface SwaggerEntity {

@@ -16,14 +16,15 @@ describe('Normalize function', () => {
             const dataToProcessFilePath = path.join(FIXTURES, initialFileName);
             const normalizedDataFilePath = path.join(FIXTURES, normalizedFileName);
 
-            const dataToProcess = await fs.readFile(dataToProcessFilePath, 'utf-8');
-            const normalizedData = await fs.readFile(normalizedFileName, 'utf-8');
+            const dataToProcessContent = await fs.readFile(dataToProcessFilePath, 'utf-8');
+            const normalizedDataContent = await fs.readFile(normalizedDataFilePath, 'utf-8');
 
-            console.log(dataToProcess);
+            const [dataToProcess] = Object.values(JSON.parse(dataToProcessContent));
+            const [normalizedData] = Object.values(JSON.parse(normalizedDataContent));
 
             const processedData = normalize(dataToProcess as any);
 
-            console.log(processedData);
+            expect(processedData).toEqual(normalizedData);
         })
     })
 });
