@@ -1,7 +1,7 @@
 import {
   ObjectDefinition, PlainDefinition, ArrayDefinition,
-  PrimitiveDataType, DataType, MergedDefinition, Schema
-} from 'contracts/ngx-openapi-types';
+  PrimitiveDataType, DataType, MergedDefinition, Schema, Property
+} from '../contracts/ngx-openapi-types';
 
 const isPrimitiveDataType = (value: DataType): value is PrimitiveDataType => {
   return value !== DataType.Array && value !== DataType.Object;
@@ -29,7 +29,7 @@ const isArrayDefinition = (schema: Schema): schema is ArrayDefinition => {
 
 type SchemaMapper = {
   check: (schema: Schema) => boolean;
-  transform: (schema?: Schema) => ObjectDefinition | null;
+  transform: (schema: Schema) => ObjectDefinition | null;
 };
 
 const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>): ObjectDefinition => {
@@ -67,31 +67,43 @@ const processMergedDefinition = (definition: MergedDefinition): ObjectDefinition
 }
 
 const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition => {
-  const { properties } = definition;
-  const names = Object.keys(properties ?? []);
+  const properties = definition.properties ?? {};
+  const names = Object.keys(properties);
 
+  const props = names.reduce((acc, name) => {
+    const value = properties[name];
 
+    if (isMergedDefinition(value)) {
+      const flatted = normalize(value);
+      return ({ ...acc, [name]: flatted?.properties })
+    } else {
+      return ({ ...acc, [name]: value })
+    }
+  }, {});
+
+  console.log(props);
+
+  return <ObjectDefinition>{
+    type: DataType.Object,
+    properties: props
+  }
 }
 
-const plainFieldTranformer = (values: ObjectDefinition, fn: TransformFunction): ObjectDefinition => {
-  const { properties: initialProperties } = values;
-  if (!initialProperties) {
-    throw new Error(`Object type field can not have properties, field type: ${values.type}`);
-  }
-  const proprertyNames = Object.keys(initialProperties);
-  const properties = proprertyNames.reduce((processedField: EntityField, propertyName: string): EntityField => {
-    const initialProperty = initialProperties[propertyName];
-    // TODO: how to check it with isComplex predicate?
-    if ('allOf' in initialProperty) {
-      const flatted = fn(initialProperty);
-      return { ...processedField, [propertyName]: flatted ?? initialProperty };
-    }
-    return { ...processedField, [propertyName]: initialProperty };
-  }, {});
-  return { ...values, properties };
-};
+// const plainFieldTranformer = (values: ObjectDefinition, fn: TransformFunction): ObjectDefinition => {
+//   const { properties: initialProperties } = values;
 
-
+//   const proprertyNames = Object.keys(initialProperties);
+//   const properties = proprertyNames.reduce((processedField: EntityField, propertyName: string): EntityField => {
+//     const initialProperty = initialProperties[propertyName];
+//     // TODO: how to check it with isComplex predicate?
+//     if ('allOf' in initialProperty) {
+//       const flatted = fn(initialProperty);
+//       return { ...processedField, [propertyName]: flatted ?? initialProperty };
+//     }
+//     return { ...processedField, [propertyName]: initialProperty };
+//   }, {});
+//   return { ...values, properties };
+// };
 
 const mappers: SchemaMapper[] = [
   {
@@ -104,26 +116,18 @@ const mappers: SchemaMapper[] = [
   },
   {
     check: (schema: Schema) => isObjectDefinition(schema),
-    transform: (schema: Schema) => null,
+    transform: (schema: Schema) => processObjectDefinition(schema as ObjectDefinition),
   }
 ];
 
-
-
 const normalize = (entity: Schema): ObjectDefinition | null | never => {
+  const rule = mappers.find(({ check }) => check(entity));
+  if (rule) {
+    const { transform } = rule;
+    return transform(entity);
+  }
 
-  // const transformationRule = typeDispatchers.find(({ check }) => check(values));
-  // if (transformationRule) {
-  //   const { transform } = transformationRule;
-  //   return transform(values, normalize);
-  // }
-
-  // throw new Error(`Unknown type of entity: ${JSON.stringify(entity)}`);
-
-  // const rule = mappers.find(({ check }) => check(entity));
-
-  console.log(JSON.stringify(entity));
-
+  throw new Error(`Normalize rules not found for entity: ${JSON.stringify(entity)}`);
 };
 
 export default normalize;

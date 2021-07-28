@@ -5,13 +5,14 @@ type ChildMapperFn = (e: SwaggerEntity, parent: BaseNode) => BaseNode;
 
 export default class GroupNode extends BaseNode {
 
-  private children: BaseNode[];
+  private readonly parent?: BaseNode;
+  private readonly children?: Array<BaseNode>;
 
-  private parent: BaseNode | null;
-
-  constructor([name, value]: SwaggerEntity, childMapper: ChildMapperFn, parent: BaseNode | null = null) {
+  constructor([name, value]: SwaggerEntity, childMapper: ChildMapperFn, parent?: BaseNode) {
     super(name, 'group');
+
     const { properties, required } = value as ObjectDefinition;
+
     if (required && properties) {
       required.forEach((propName: string) => {
         if (Object.prototype.hasOwnProperty.call(properties, propName)) {
@@ -19,8 +20,9 @@ export default class GroupNode extends BaseNode {
         }
       });
     }
-    const rawChildren = Object.entries(properties ?? []) as SwaggerEntity[];
+
     this.parent = parent;
+
     this.children = rawChildren.map((child: SwaggerEntity) => childMapper(child, this));
   }
 
@@ -42,6 +44,7 @@ export default class GroupNode extends BaseNode {
     const name = this.getName();
     const body = this.children.map((child: BaseNode) => child.build()).join(',\n');
     const isInnerNode = !!this.parent;
+
     return isInnerNode ? GroupNode.buildInnerNode(name, body) : GroupNode.buildUpperNode(name, body);
   }
 }
