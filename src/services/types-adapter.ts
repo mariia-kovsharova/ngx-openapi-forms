@@ -1,5 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { ArrayDefinition, DataType, NonArrayDataType, ObjectDefinition, PlainDefinition, PrimitiveDataType, Property, Schema } from '../contracts/ngx-openapi-types';
+import {
+    ArrayDefinition, DataType, NonArrayDataType,
+    ObjectDefinition, PlainDefinition, PrimitiveDataType,
+    Property, Schema
+} from '../contracts/ngx-openapi-types';
 
 type OpenApiType = (OpenAPIV3.ArraySchemaObject | OpenAPIV3.NonArraySchemaObject)['type'];
 type MappingFn = (from: OpenAPIV3.SchemaObject) => Schema;
@@ -7,8 +11,8 @@ type MappingFn = (from: OpenAPIV3.SchemaObject) => Schema;
 const objectMapper: MappingFn = (from: OpenAPIV3.SchemaObject): ObjectDefinition => {
     return {
         type: DataType.Object,
-        properties: from.properties as Property,
-        requiredFields: from.required
+        properties: (from.properties as Property) ?? {},
+        requiredFields: from.required ?? []
     }
 };
 

@@ -1,4 +1,5 @@
-import { SwaggerEntity, SwaggerPlainDefinition, DefaultValueType } from '../contracts/ngx-openapi-types';
+import { Entity, DefaultValueType, ObjectDefinition } from '../contracts/ngx-openapi-types';
+import { isNil, isString } from '../services/utils';
 import getRule from '../validation/rules';
 import BaseNode from './baseNode';
 
@@ -10,26 +11,32 @@ export default class ControlNode extends BaseNode {
   private readonly defaultValue: DefaultValueType;
   private readonly validators?: ReadonlyArray<string>;
 
-  // TODO: ugly
-  private static transformDefaultValue<T>(value: T): NonNullValue<T>;
-  private static transformDefaultValue<T>(value: T): string | T {
+  private static transformDefaultValue<T>(value: T | null): NonNullValue<T> {
     if (value === null) {
       return 'null';
     }
-    if (typeof value === 'string') {
+
+    if (isString(value)) {
       return `"${value}"`;
     }
+
     return value;
   }
 
-  constructor([name, value]: SwaggerEntity) {
+  constructor({ name, value }: Entity) {
     super(name, 'control');
 
-    const properties = value as SwaggerPlainDefinition;
-    const rules = Object.entries(properties);
+    const { properties } = value as ObjectDefinition;
+
+    const names = Object.keys(properties);
+
+
+
     this.validators = rules.map(getRule).filter(Boolean);
+
     this.disabled = Object.prototype.hasOwnProperty.call(properties, 'readOnly');
-    this.defaultValue = properties.default ?? null;
+
+    // this.defaultValue = properties.default ?? null;
   }
 
   public build(): string {

@@ -7,6 +7,9 @@ const FIXTURES = path.join(__dirname, '__fixtures__');
 const NORMALIZED_FOLDER = path.join(FIXTURES, 'normalized');
 
 describe('Normalize function', () => {
+    it('', () => {
+        expect(true).toBeTruthy();
+    })
     // FILES.forEach((name: string) => {
     //     const fileName = `${name}.json`;
 

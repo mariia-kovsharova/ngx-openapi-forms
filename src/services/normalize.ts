@@ -1,6 +1,6 @@
 import {
-  ObjectDefinition, PlainDefinition, ArrayDefinition,
-  PrimitiveDataType, DataType, MergedDefinition, Schema, Property
+  ObjectDefinition, PlainDefinition, PrimitiveDataType,
+  DataType, MergedDefinition, Schema
 } from '../contracts/ngx-openapi-types';
 
 const isPrimitiveDataType = (value: DataType): value is PrimitiveDataType => {
@@ -23,10 +23,6 @@ const isObjectDefinition = (schema: Schema): schema is ObjectDefinition => {
   return !isMergedDefinition(schema) && schema.type === DataType.Object;
 }
 
-const isArrayDefinition = (schema: Schema): schema is ArrayDefinition => {
-  return !isMergedDefinition(schema) && schema.type === DataType.Array;
-}
-
 type SchemaMapper = {
   check: (schema: Schema) => boolean;
   transform: (schema: Schema) => ObjectDefinition | null;
@@ -40,8 +36,8 @@ const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>)
   };
 
   return objDefinitions.reduce((def, currentObjDef) => {
-    const props = { ...(def.properties ?? {}), ...(currentObjDef.properties ?? {}) };
-    const requiredFields = [...(def.requiredFields ?? []), ...(currentObjDef.requiredFields ?? [])];
+    const props = { ...def.properties, ...currentObjDef.properties };
+    const requiredFields = [...def.requiredFields, ...currentObjDef.requiredFields];
 
     def.properties = props;
     def.requiredFields = requiredFields;
@@ -67,7 +63,7 @@ const processMergedDefinition = (definition: MergedDefinition): ObjectDefinition
 }
 
 const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition => {
-  const properties = definition.properties ?? {};
+  const { properties } = definition;
   const names = Object.keys(properties);
 
   const props = names.reduce((acc, name) => {
@@ -81,29 +77,11 @@ const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition
     }
   }, {});
 
-  console.log(props);
-
   return <ObjectDefinition>{
     type: DataType.Object,
     properties: props
   }
 }
-
-// const plainFieldTranformer = (values: ObjectDefinition, fn: TransformFunction): ObjectDefinition => {
-//   const { properties: initialProperties } = values;
-
-//   const proprertyNames = Object.keys(initialProperties);
-//   const properties = proprertyNames.reduce((processedField: EntityField, propertyName: string): EntityField => {
-//     const initialProperty = initialProperties[propertyName];
-//     // TODO: how to check it with isComplex predicate?
-//     if ('allOf' in initialProperty) {
-//       const flatted = fn(initialProperty);
-//       return { ...processedField, [propertyName]: flatted ?? initialProperty };
-//     }
-//     return { ...processedField, [propertyName]: initialProperty };
-//   }, {});
-//   return { ...values, properties };
-// };
 
 const mappers: SchemaMapper[] = [
   {

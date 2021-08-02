@@ -24,7 +24,6 @@ export default abstract class BaseNode {
     return this._type === 'group';
   }
 
-  // TODO: по-другому как-то сделать?
   public isInterfaceNode(): boolean {
     return this.name.startsWith('i');
   }

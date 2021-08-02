@@ -47,7 +47,7 @@ const mapper = [
   },
 ];
 
-export default ([key, value]: [string, unknown]): string => {
+export default ([key, value]: [keyof Definition, Definition]) => {
   const rule = mapper.find(({ check }) => check(key));
   if (!rule) {
     return '';
