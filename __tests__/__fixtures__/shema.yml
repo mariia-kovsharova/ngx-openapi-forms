@@ -16,6 +16,9 @@ paths:
           description: "Method not allowed"
 components:
   schemas:
+    Plain:
+      type: integer
+      default: 0
   
     IFoo:
       type: object
@@ -117,8 +120,11 @@ components:
         - $ref: "#/components/schemas/IFoo"
         - allOf:
           - $ref: "#/components/schemas/Dog"
+          - $ref: "#/components/schemas/Plain"
           - type: object
             properties:
               baz:
                 type: string
       
+    Wrong:
+      type: object

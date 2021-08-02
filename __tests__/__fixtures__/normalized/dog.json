@@ -1,0 +1,33 @@
+{
+    "Dog": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "format": "uuid",
+                "readOnly": true
+            },
+            "kind": {
+                "type": "string"
+            },
+            "tail": {
+                "type": "boolean",
+                "default": true
+            },
+            "barks": {
+                "type": "boolean",
+                "default": true
+            },
+            "name": {
+                "type": "string",
+                "pattern": "^[a-zA-Z]&",
+                "default": "Bob"
+            }
+        },
+        "requiredFields": [
+            "kind",
+            "tail",
+            "name"
+        ]
+    }
+}
