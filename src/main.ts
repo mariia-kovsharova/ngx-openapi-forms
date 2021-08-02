@@ -4,13 +4,8 @@ import prettier from 'prettier';
 import normalize from './services/normalize';
 import { IGeneratedFile } from './contracts/ngx-openapi-gen';
 import { isNil } from './services/utils';
-import { ObjectDefinition } from './contracts/ngx-openapi-types';
 import adapt from '../src/services/types-adapter';
-
-interface IEntity {
-  name: string;
-  value: ObjectDefinition | null
-}
+import buildNode from '../src/services/node-builder';
 
 const buildImports = (): string => {
   return `
@@ -46,11 +41,10 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
     .map(({ name, value }) => ({ name, value: adapt(value) }))
     .map(({ name, value }) => ({ name, value: normalize(value) }))
     .filter(({ value }) => !isNil(value))
-
-    .map(entity => createNode(entity))
+    .map(entity => buildNode(entity))
     .filter(node => node.isFormGroup() && !node.isInterfaceNode())
     .map(node => ({
-      name: node.getName(),
+      name: node.name,
       content: buildFileContent(node)
     }));
 }

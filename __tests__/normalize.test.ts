@@ -2,19 +2,18 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import normalize from '../src/services/normalize';
 
-const INIT_SUFFIX = 'init';
-const NORMALIZED_SUFFIX = 'normalized';
-const FILES = ['nested'];
-const FIXTURES = path.join(__dirname, '__fixtures__', 'normalize');
+const FILES = ['nested', 'cat', 'dog', 'aquarium'];
+const FIXTURES = path.join(__dirname, '__fixtures__');
+const INITIAL_FOLDER = path.join(FIXTURES, 'initial');
+const NORMALIZED_FOLDER = path.join(FIXTURES, 'normalized');
 
 describe('Normalize function', () => {
     FILES.forEach((name: string) => {
-        const initialFileName = `${name}.${INIT_SUFFIX}.json`;
-        const normalizedFileName = `${name}.${NORMALIZED_SUFFIX}.json`;
+        const fileName = `${name}.json`;
 
-        it(`Normalized content of ${initialFileName} should be equal ${normalizedFileName}`, async () => {
-            const dataToProcessFilePath = path.join(FIXTURES, initialFileName);
-            const normalizedDataFilePath = path.join(FIXTURES, normalizedFileName);
+        it(`Normalization of file: "${fileName}"`, async () => {
+            const dataToProcessFilePath = path.join(INITIAL_FOLDER, fileName);
+            const normalizedDataFilePath = path.join(NORMALIZED_FOLDER, fileName);
 
             const dataToProcessContent = await fs.readFile(dataToProcessFilePath, 'utf-8');
             const normalizedDataContent = await fs.readFile(normalizedDataFilePath, 'utf-8');

@@ -1,0 +1,64 @@
+{
+    "Aquarium": {
+        "type": "object",
+        "allOf": [
+            {
+                "type": "object",
+                "properties": {
+                    "shape": {
+                        "type": "string",
+                        "default": "round"
+                    },
+                    "background": {
+                        "type": "string",
+                        "default": "transparent"
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "fishes": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "readOnly": true
+                                    },
+                                    "kind": {
+                                        "type": "string"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    }
+                                },
+                                "requiredFields": [
+                                    "kind",
+                                    "color"
+                                ]
+                            }
+                        ]
+                    },
+                    "lights": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 5
+                    }
+                }
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "foo": {
+                        "type": "string",
+                        "default": "baz"
+                    }
+                }
+            }
+        ]
+    }
+}

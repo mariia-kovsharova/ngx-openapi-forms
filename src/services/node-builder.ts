@@ -1,4 +1,4 @@
-import { SwaggerEntity, ObjectDefinition, DataType } from 'contracts/ngx-openapi-types';
+import { SwaggerEntity, DataType } from 'contracts/ngx-openapi-types';
 import ArrayNode from '../nodes/arrayNode';
 import BaseNode from '../nodes/baseNode';
 import ControlNode from '../nodes/controlNode';
@@ -25,8 +25,7 @@ const buildNode = (entity: SwaggerEntity, parent?: BaseNode): BaseNode => {
   if (!entity) {
     throw new Error('Entity can not be null');
   }
-  const [, value] = entity;
-  const { type } = value as ObjectDefinition;
+  const { value: { type } } = entity;
   return entityMapper(type)(entity, parent);
 };
 

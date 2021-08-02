@@ -12,12 +12,12 @@ export default abstract class BaseNode {
     this._type = type;
   }
 
-  protected get name(): string {
-    return this._name;
-  }
-
   protected get type(): FormNodeType {
     return this._type;
+  }
+
+  public get name(): string {
+    return this._name;
   }
 
   public isFormGroup(): boolean {

@@ -25,6 +25,19 @@
   },
   "components": {
     "schemas": {
+      "Plain": {
+        "type": "integer",
+        "default": 0
+      },
+      "IFoo": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "string",
+            "pattern": "^[123]&"
+          }
+        }
+      },
       "IPet": {
         "type": "object",
         "properties": {
@@ -112,7 +125,7 @@
           }
         ]
       },
-      "IAquarium": {
+      "IAquariumLook": {
         "type": "object",
         "properties": {
           "shape": {
@@ -125,12 +138,9 @@
           }
         }
       },
-      "Aquarium": {
+      "IAquariumProps": {
         "type": "object",
         "properties": {
-          "features": {
-            "$ref": "#/components/schemas/IAquarium"
-          },
           "fishes": {
             "type": "array",
             "items": {
@@ -143,6 +153,54 @@
             "maximum": 5
           }
         }
+      },
+      "Aquarium": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IAquariumLook"
+          },
+          {
+            "$ref": "#/components/schemas/IAquariumProps"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "foo": {
+                "type": "string",
+                "default": "baz"
+              }
+            }
+          }
+        ]
+      },
+      "Nested": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IFoo"
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Dog"
+              },
+              {
+                "$ref": "#/components/schemas/Plain"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "baz": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "Wrong": {
+        "type": "object"
       }
     }
   }
