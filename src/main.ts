@@ -3,7 +3,7 @@ import BaseNode from 'nodes/baseNode';
 import prettier from 'prettier';
 import normalize from './services/normalize';
 import { IGeneratedFile } from './contracts/ngx-openapi-gen';
-import { isNil } from './services/utils';
+import { hasPresentKey, isNil } from './services/utils';
 import adapt from '../src/services/types-adapter';
 import buildNode from '../src/services/node-builder';
 
@@ -40,7 +40,7 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
   return entities
     .map(({ name, value }) => ({ name, value: adapt(value) }))
     .map(({ name, value }) => ({ name, value: normalize(value) }))
-    .filter(({ value }) => !isNil(value))
+    .filter(hasPresentKey('value'))
     .map(entity => buildNode(entity))
     .filter(node => node.isFormGroup() && !node.isInterfaceNode())
     .map(node => ({

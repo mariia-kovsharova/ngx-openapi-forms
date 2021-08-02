@@ -32,8 +32,8 @@ export type PlainDefinition = Definition & {
 
 export type ObjectDefinition = Definition & {
   type: DataType.Object;
-  properties?: Property;
-  requiredFields?: Array<string>;
+  properties: Property;
+  requiredFields: Array<string>;
 };
 
 export type ArrayDefinition = Definition & {
@@ -48,11 +48,13 @@ export type MergedDefinition = Definition & {
 
 export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition | MergedDefinition;
 
+export type NonArrayDefinition = PlainDefinition | ObjectDefinition | MergedDefinition;
+
 export type Property = {
-  [name: string]: Exclude<Schema, ArrayDefinition>
+  [name: string]: NonArrayDefinition
 }
 
-export interface SwaggerEntity {
+export interface Entity {
   name: string;
   value: ObjectDefinition | MergedDefinition;
 };

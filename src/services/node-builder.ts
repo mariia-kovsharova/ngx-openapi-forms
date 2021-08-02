@@ -1,12 +1,12 @@
-import { SwaggerEntity, DataType } from 'contracts/ngx-openapi-types';
+import { Entity, DataType } from 'contracts/ngx-openapi-types';
 import ArrayNode from '../nodes/arrayNode';
 import BaseNode from '../nodes/baseNode';
 import ControlNode from '../nodes/controlNode';
 import GroupNode from '../nodes/groupNode';
 
-type NodeConstructor = (e: SwaggerEntity, p?: BaseNode) => BaseNode;
+type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
 
-const entityMapper = (type: DataType): NodeConstructor => (e: SwaggerEntity, p?: BaseNode): BaseNode => {
+const entityMapper = (type: DataType): NodeConstructor => (e: Entity, p?: BaseNode): BaseNode => {
   switch (type) {
     case DataType.Object:
       return new GroupNode(e, buildNode, p);
@@ -21,7 +21,7 @@ const entityMapper = (type: DataType): NodeConstructor => (e: SwaggerEntity, p?:
   }
 };
 
-const buildNode = (entity: SwaggerEntity, parent?: BaseNode): BaseNode => {
+const buildNode = (entity: Entity, parent?: BaseNode): BaseNode => {
   if (!entity) {
     throw new Error('Entity can not be null');
   }
