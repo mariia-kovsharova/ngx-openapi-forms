@@ -1,34 +1,36 @@
-import { Entity, NonArrayDefinition, ObjectDefinition, Schema } from '../contracts/ngx-openapi-types';
+import { Entity, NonArrayDefinition, ObjectDefinition } from '../contracts/ngx-openapi-types';
+import { NodeConstructor } from '../services/node-builder';
 import { isNil } from '../services/utils';
 import BaseNode from './baseNode';
-
-type ChildMapperFn = (e: Entity, parent: BaseNode) => BaseNode;
 
 export default class GroupNode extends BaseNode {
 
   private readonly parent?: BaseNode;
-  private readonly children?: Array<BaseNode>;
+  private readonly children: Array<BaseNode>;
 
-  constructor({ name, value }: Entity, childMapper: ChildMapperFn, parent?: BaseNode) {
+  constructor({ name, value }: Entity, childMapper: NodeConstructor, parent?: BaseNode) {
     super(name, 'group');
 
     const { properties, requiredFields } = value as ObjectDefinition;
 
     if (requiredFields && properties) {
+      const allControlsNames = Object.keys(properties);
+
       requiredFields.forEach((propName: string) => {
-        if (Object.prototype.hasOwnProperty.call(properties, propName)) {
-          properties[propName] = { ...properties[propName], required: true };
+        if (allControlsNames.includes(propName)) {
+          properties[propName] = { ...properties[propName], required: true }
         }
       });
     }
 
-    this.parent = parent;
+    const rawChildren = Object.entries(properties) as Array<[string, NonArrayDefinition]>;
 
-    const rawChildren = Object.entries(properties ?? {});
     this.children = rawChildren.map((rawChild: [string, NonArrayDefinition]) => {
       const [name, value] = rawChild;
-      const entity: Entity = { name, value }
+      return childMapper({ name, value }, this);
     });
+
+    this.parent = parent;
   }
 
   private static buildUpperNode(name: string, body: string): string {

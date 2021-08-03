@@ -3,8 +3,9 @@ import ArrayNode from '../nodes/arrayNode';
 import BaseNode from '../nodes/baseNode';
 import ControlNode from '../nodes/controlNode';
 import GroupNode from '../nodes/groupNode';
+import { isNil } from './utils';
 
-type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
+export type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
 
 const entityMapper = (type: DataType): NodeConstructor => (e: Entity, p?: BaseNode): BaseNode => {
   switch (type) {
@@ -22,7 +23,7 @@ const entityMapper = (type: DataType): NodeConstructor => (e: Entity, p?: BaseNo
 };
 
 const buildNode = (entity: Entity, parent?: BaseNode): BaseNode => {
-  if (!entity) {
+  if (isNil(entity)) {
     throw new Error('Entity can not be null');
   }
   const { value: { type } } = entity;
