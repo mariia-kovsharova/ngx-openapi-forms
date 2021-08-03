@@ -56,5 +56,5 @@ export type Property = {
 
 export interface Entity {
   name: string;
-  value: ObjectDefinition | MergedDefinition;
+  value: Schema;
 };

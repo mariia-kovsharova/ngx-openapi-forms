@@ -3,7 +3,7 @@ import BaseNode from 'nodes/baseNode';
 import prettier from 'prettier';
 import normalize from './services/normalize';
 import { IGeneratedFile } from './contracts/ngx-openapi-gen';
-import { hasPresentKey, isNil } from './services/utils';
+import { hasPresentKey } from './services/utils';
 import adapt from '../src/services/types-adapter';
 import buildNode from '../src/services/node-builder';
 
