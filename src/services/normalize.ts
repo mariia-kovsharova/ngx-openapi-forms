@@ -3,29 +3,31 @@ import {
   DataType, MergedDefinition, Schema
 } from '../contracts/ngx-openapi-types';
 
+type SchemaDefinition = Schema | MergedDefinition;
+
 const isPrimitiveDataType = (value: DataType): value is PrimitiveDataType => {
   return value !== DataType.Array && value !== DataType.Object;
 }
 
-const isMergedDefinition = (schema: Schema): schema is MergedDefinition => {
+const isMergedDefinition = (schema: SchemaDefinition): schema is MergedDefinition => {
   return !!(schema as MergedDefinition).allOf;
 }
 
-const isPrimitive = (schema: Schema): boolean => {
+const isPrimitive = (schema: SchemaDefinition): boolean => {
   return !isMergedDefinition(schema) && isPrimitiveDataType(schema.type);
 }
 
-const isEnum = (schema: Schema): boolean => {
+const isEnum = (schema: SchemaDefinition): boolean => {
   return !!(schema as PlainDefinition).enum;
 }
 
-const isObjectDefinition = (schema: Schema): schema is ObjectDefinition => {
+const isObjectDefinition = (schema: SchemaDefinition): schema is ObjectDefinition => {
   return !isMergedDefinition(schema) && schema.type === DataType.Object;
 }
 
 type SchemaMapper = {
-  check: (schema: Schema) => boolean;
-  transform: (schema: Schema) => ObjectDefinition | null;
+  check: (schema: SchemaDefinition) => boolean;
+  transform: (schema: SchemaDefinition) => ObjectDefinition | null;
 };
 
 const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>): ObjectDefinition => {
@@ -85,20 +87,20 @@ const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition
 
 const mappers: SchemaMapper[] = [
   {
-    check: (schema: Schema) => isPrimitive(schema) || isEnum(schema),
+    check: (schema: SchemaDefinition) => isPrimitive(schema) || isEnum(schema),
     transform: () => null,
   },
   {
-    check: (schema: Schema) => isMergedDefinition(schema),
-    transform: (schema: Schema) => processMergedDefinition(schema as MergedDefinition),
+    check: (schema: SchemaDefinition) => isMergedDefinition(schema),
+    transform: (schema: SchemaDefinition) => processMergedDefinition(schema as MergedDefinition),
   },
   {
-    check: (schema: Schema) => isObjectDefinition(schema),
-    transform: (schema: Schema) => processObjectDefinition(schema as ObjectDefinition),
+    check: (schema: SchemaDefinition) => isObjectDefinition(schema),
+    transform: (schema: SchemaDefinition) => processObjectDefinition(schema as ObjectDefinition),
   }
 ];
 
-const normalize = (entity: Schema): ObjectDefinition | null | never => {
+const normalize = (entity: SchemaDefinition): ObjectDefinition | null | never => {
   const rule = mappers.find(({ check }) => check(entity));
   if (rule) {
     const { transform } = rule;

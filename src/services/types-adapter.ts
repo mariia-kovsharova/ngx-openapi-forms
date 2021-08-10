@@ -34,7 +34,7 @@ const plainMapper: MappingFn = (from: OpenAPIV3.SchemaObject): PlainDefinition =
         minLength: from.minLength,
         maxLength: from.maxLength,
         readOnly: from.readOnly,
-        defaultValue: from.default
+        default: from.default
     }
 }
 

@@ -19,7 +19,7 @@ const buildValidator = (type: BasicValidators, value?: unknown): string =>
 const mapper = [
   {
     check: (name: Property) => name === 'format',
-    process: (value: unknown) => (value === 'email' ? 'Validators.email' : ''),
+    process: (value: unknown) => (value === 'email' ? 'Validators.email' : null),
   },
   {
     check: (name: Property) => name === 'pattern',
@@ -47,10 +47,10 @@ const mapper = [
   },
 ];
 
-export default <T extends Definition>(key: keyof Definition, value: T) => {
+export default <T extends Definition>(key: keyof Definition, value: T): string | null => {
   const rule = mapper.find(({ check }) => check(key));
   if (!rule) {
-    return '';
+    return null;
   }
   const { process } = rule;
   return process(value);

@@ -1,4 +1,4 @@
-import { Entity, NonArrayDefinition, ObjectDefinition } from '../contracts/ngx-openapi-types';
+import { Entity, ObjectEntity, Schema } from '../contracts/ngx-openapi-types';
 import { NodeConstructor } from '../services/node-builder';
 import { isNil } from '../services/utils';
 import BaseNode from './baseNode';
@@ -8,10 +8,10 @@ export default class GroupNode extends BaseNode {
   private readonly parent?: BaseNode;
   private readonly children: Array<BaseNode>;
 
-  constructor({ name, value }: Entity, childMapper: NodeConstructor, parent?: BaseNode) {
+  constructor({ name, value }: ObjectEntity, childMapper: NodeConstructor, parent?: BaseNode) {
     super(name, 'group');
 
-    const { properties, requiredFields } = value as ObjectDefinition;
+    const { properties, requiredFields } = value;
 
     if (requiredFields && properties) {
       const allControlsNames = Object.keys(properties);
@@ -23,33 +23,29 @@ export default class GroupNode extends BaseNode {
       });
     }
 
-    const rawChildren = Object.entries(properties) as Array<[string, NonArrayDefinition]>;
+    const rawChildren = Object.entries<Schema>(properties);
 
-    this.children = rawChildren.map((rawChild: [string, NonArrayDefinition]) => {
+    this.children = rawChildren.map((rawChild: [string, Schema]) => {
       const [name, value] = rawChild;
-      return childMapper({ name, value }, this);
+      const entity: Entity = { name, value };
+
+      return childMapper(entity, this);
     });
 
     this.parent = parent;
   }
 
   private static buildUpperNode(name: string, body: string): string {
-    return `\nconst ${name} = new FormGroup({
-      ${body}
-    });\n\n
-  export default ${name};`;
+    return `const ${name} = new FormGroup({${body}});\nexport default ${name};`;
   }
 
   private static buildInnerNode(name: string, body: string): string {
-    return `${name}: new FormGroup({
-        ${body}
-      })
-    `;
+    return `${name}: new FormGroup({${body}})`;
   }
 
   public build(): string {
     const { name } = this;
-    const body = this.children.map((child: BaseNode) => child.build()).join(',\n');
+    const body = this.children.map((child: BaseNode) => child.build()).join(',');
     const isInnerNode = !isNil(this.parent);
 
     return isInnerNode ? GroupNode.buildInnerNode(name, body) : GroupNode.buildUpperNode(name, body);
