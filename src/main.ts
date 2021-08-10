@@ -22,7 +22,7 @@ const buildFileContent = (node: BaseNode): string => {
   return prettier.format(text, {
     parser: 'typescript',
     singleQuote: true,
-    trailingComma: 'all',
+    trailingComma: 'es5',
     tabWidth: 2
   });
 };

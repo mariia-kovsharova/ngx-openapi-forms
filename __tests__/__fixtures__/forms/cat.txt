@@ -1,20 +1,32 @@
 const cat = new FormGroup({
-  id: new FormControl({
-    value: null,
-    disabled: true,
-  }, []),
-  kind: new FormControl({
-    value: null,
-    disabled: false,
-  }, [Validators.required]),
-  tail: new FormControl({
-    value: true,
-    disabled: false,
-  }, [Validators.required]),
-  name: new FormControl({
-    value: null,
-    disabled: false,
-  }, [Validators.pattern(/^[a-zA-Z]&/), Validators.required]),
+  id: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    []
+  ),
+  kind: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+  tail: new FormControl(
+    {
+      value: true,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+  name: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.pattern(/^[a-zA-Z]&/), Validators.required]
+  ),
 });
 
 export default cat;

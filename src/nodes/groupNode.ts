@@ -36,11 +36,15 @@ export default class GroupNode extends BaseNode {
   }
 
   private static buildUpperNode(name: string, body: string): string {
-    return `const ${name} = new FormGroup({${body}});\nexport default ${name};`;
+    return `const ${name} = new FormGroup({
+      ${body}}
+    );\nexport default ${name};`;
   }
 
   private static buildInnerNode(name: string, body: string): string {
-    return `${name}: new FormGroup({${body}})`;
+    return `${name}: new FormGroup({
+      ${body}
+    })`;
   }
 
   public build(): string {
