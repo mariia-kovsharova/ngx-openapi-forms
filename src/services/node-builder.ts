@@ -1,4 +1,4 @@
-import { Entity, DataType } from 'contracts/ngx-openapi-types';
+import { Entity, DataType, ArrayEntity, ObjectEntity, PlainEntity } from '../contracts/ngx-openapi-types';
 import ArrayNode from '../nodes/arrayNode';
 import BaseNode from '../nodes/baseNode';
 import ControlNode from '../nodes/controlNode';
@@ -10,13 +10,13 @@ export type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
 const entityMapper = (type: DataType): NodeConstructor => (e: Entity, p?: BaseNode): BaseNode => {
   switch (type) {
     case DataType.Object:
-      return new GroupNode(e, buildNode, p);
+      return new GroupNode(e as ObjectEntity, buildNode, p);
     case DataType.Array:
-      return new ArrayNode(e);
+      return new ArrayNode(e as ArrayEntity);
     case DataType.String:
     case DataType.Boolean:
     case DataType.Integer:
-      return new ControlNode(e);
+      return new ControlNode(e as PlainEntity);
     default:
       throw new Error(`Can not create node for type: ${type}`);
   }

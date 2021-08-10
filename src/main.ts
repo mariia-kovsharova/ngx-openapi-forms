@@ -23,6 +23,7 @@ const buildFileContent = (node: BaseNode): string => {
     parser: 'typescript',
     singleQuote: true,
     trailingComma: 'all',
+    tabWidth: 2
   });
 };
 

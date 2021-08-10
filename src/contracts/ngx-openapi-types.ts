@@ -23,7 +23,7 @@ export type Definition = {
   minLength?: number;
   maxLength?: number;
   required?: boolean;
-  defaultValue?: DefaultValueType;
+  default?: DefaultValueType;
 };
 
 export type PlainDefinition = Definition & {
@@ -46,15 +46,32 @@ export type MergedDefinition = Definition & {
   allOf: Array<ObjectDefinition | MergedDefinition>
 }
 
-export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition | MergedDefinition;
+export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition;
 
-export type NonArrayDefinition = PlainDefinition | ObjectDefinition | MergedDefinition;
+export type NonArrayDefinition = PlainDefinition | ObjectDefinition;
 
 export type Property = {
-  [name: string]: NonArrayDefinition
+  [name: string]: Schema
 }
 
-export interface Entity {
+export interface ObjectEntity {
   name: string;
-  value: Schema;
+  value: ObjectDefinition;
+};
+
+export interface ArrayEntity {
+  name: string;
+  value: ArrayDefinition;
+};
+
+export interface PlainEntity {
+  name: string;
+  value: PlainDefinition;
+};
+
+// TODO: check why 
+// export type Entity = ObjectEntity | ArrayEntity | PlainEntity;
+export type Entity = {
+  name: string;
+  value: ObjectDefinition | ArrayDefinition | PlainDefinition;
 };
