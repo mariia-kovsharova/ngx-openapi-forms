@@ -2,14 +2,14 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import normalize from '../src/services/normalize';
 
-const FILES = ['nested', 'cat', 'dog', 'aquarium'];
+const ENTITIES = ['nested', 'cat', 'dog', 'aquarium'];
 const FIXTURES = path.join(__dirname, '__fixtures__');
 const INITIAL_FOLDER = path.join(FIXTURES, 'initial');
 const NORMALIZED_FOLDER = path.join(FIXTURES, 'normalized');
 
 describe('Normalize function', () => {
-    FILES.forEach((name: string) => {
-        const fileName = `${name}.json`;
+    ENTITIES.forEach((entity: string) => {
+        const fileName = `${entity}.json`;
 
         it(`Normalization of file: "${fileName}"`, async () => {
             const dataToProcessFilePath = path.join(INITIAL_FOLDER, fileName);
