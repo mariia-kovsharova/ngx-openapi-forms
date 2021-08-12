@@ -37,8 +37,8 @@
             },
             "lights": {
                 "type": "number",
-                "minimum": 1,
-                "maximum": 5
+                "minValue": 1,
+                "maxValue": 5
             },
             "foo": {
                 "type": "string",

@@ -1,19 +1,19 @@
 const aquarium = new FormGroup({
   shape: new FormControl(
     {
-      value: "round",
+      value: 'round',
       disabled: false,
     },
     []
   ),
   background: new FormControl(
     {
-      value: "transparent",
+      value: 'transparent',
       disabled: false,
     },
     []
   ),
-  fishes: new FormArray(),
+  fishes: new FormArray([]),
   lights: new FormControl(
     {
       value: null,
@@ -23,11 +23,11 @@ const aquarium = new FormGroup({
   ),
   foo: new FormControl(
     {
-      value: "baz",
+      value: 'baz',
       disabled: false,
     },
     []
   ),
 });
 
-export default cat;
+export default aquarium;

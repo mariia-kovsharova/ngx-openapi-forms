@@ -22,16 +22,17 @@ describe('build nodes function', () => {
 
             const [normalizedData] = Object.values(JSON.parse(normalizedDataContent));
 
-            const data = buildNode({ name: entity, value: normalizedData } as any);
+            const node = buildNode({ name: entity, value: normalizedData } as any);
 
-            const builtData = prettier.format(data.build(), {
+            const builtData = prettier.format(node.build(), {
                 parser: 'typescript',
                 trailingComma: 'es5',
                 singleQuote: true,
-                tabWidth: 2
+                tabWidth: 2,
+                useTabs: false
             });
 
-            expect(builtData === resultDataContent);
+            expect(builtData).toBe(resultDataContent);
         })
     })
 });
