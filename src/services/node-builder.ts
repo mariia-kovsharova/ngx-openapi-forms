@@ -15,6 +15,7 @@ const entityMapper = (type: DataType): NodeConstructor => (e: Entity, p?: BaseNo
       return new ArrayNode(e as ArrayEntity);
     case DataType.String:
     case DataType.Boolean:
+    case DataType.Number:
     case DataType.Integer:
       return new ControlNode(e as PlainEntity);
     default:

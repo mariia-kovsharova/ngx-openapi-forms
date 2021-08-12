@@ -5,7 +5,8 @@ export enum DataType {
   Array = 'array',
   String = 'string',
   Boolean = 'boolean',
-  Integer = 'integer'
+  Integer = 'integer',
+  Number = 'number'
 }
 
 export type PrimitiveDataType = DataType.Boolean | DataType.String | DataType.Integer;
