@@ -25,6 +25,7 @@ export type Definition = {
   maxLength?: number;
   required?: boolean;
   default?: DefaultValueType;
+  isGroup: boolean;
 };
 
 export type PlainDefinition = Definition & {
@@ -76,3 +77,9 @@ export type Entity = {
   name: string;
   value: ObjectDefinition | ArrayDefinition | PlainDefinition;
 };
+
+type Keys<T> = keyof (Required<T>);
+type Values<T> = (Required<T>)[keyof T];
+
+export type DefinitionKeys = Keys<Definition>;
+export type DefinitionValues = Values<Definition>;

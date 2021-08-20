@@ -1,5 +1,6 @@
 {
     "Dog": {
+        "isGroup": true,
         "type": "object",
         "properties": {
             "id": {

@@ -1,9 +1,11 @@
 {
-  "name": "ngx-openapi-form-gen",
+  "name": "ngx-openapi-forms",
   "version": "1.0.0",
-  "description": "Generates Angular forms as multiply files from open-api YAML or JSON. It is possible to generate Reactive-driven or Template-driven forms",
+  "description": "Generates Angular Reactive-driven forms as multiply files from open-api YAML or JSON.",
   "main": "dist/main.js",
-  "bin": "dist/bin/index.js",
+  "bin": {
+    "ngx-openapi-forms": "dist/bin/index.js"
+  },
   "files": [
     "dist"
   ],
@@ -16,8 +18,7 @@
     "openapi",
     "forms",
     "reactive forms",
-    "generation",
-    "generator"
+    "generation"
   ],
   "homepage": "",
   "bugs": {

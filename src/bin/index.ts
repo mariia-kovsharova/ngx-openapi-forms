@@ -13,7 +13,7 @@ const isOpenApiV3Document = (api: OpenAPI.Document): api is OpenAPIV3.Document =
 
 program
   .description('Generates Angular Reactive Forms templates from openapi yaml/json file to output dir')
-  .version('2.0.0')
+  .version('1.0.0')
   .option('-i, --input', 'Path to openapi file')
   .option('-o, --output', 'Path to dir for output files')
   .arguments('<input> <output>')
@@ -25,16 +25,25 @@ program
         await fs.writeFile(fullPath, content, { encoding: 'utf-8' });
       };
 
-      const api = await SwaggerParser.dereference(inputFilePath);
+      const options: SwaggerParser.Options = {
+        dereference: {
+          circular: true,
+        },
+        validate: {
+          schema: true
+        }
+      };
+
+      const api = await SwaggerParser.validate(inputFilePath, options);
 
       if (!isOpenApiV3Document(api)) {
         throw new Error('Current version of library supports only OpenApi versions 3.0 and above.');
       }
 
-      const files = generate(api);
+      const generatedFileContents = generate(api);
 
       await fs.mkdir(outputFilePath, { recursive: true });
-      await Promise.all(files.map(writeFile));
+      await Promise.all(generatedFileContents.map(writeFile));
 
       // eslint-disable-next-line no-console
       console.log(`Generating files successfully completed. Files created at path: ${outputFilePath} (click link to open)`);

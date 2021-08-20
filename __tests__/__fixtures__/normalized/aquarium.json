@@ -1,5 +1,6 @@
 {
     "Aquarium": {
+        "isGroup": true,
         "type": "object",
         "properties": {
             "shape": {

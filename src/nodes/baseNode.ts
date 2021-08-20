@@ -20,13 +20,5 @@ export default abstract class BaseNode {
     return this._name;
   }
 
-  public isFormGroup(): boolean {
-    return this._type === 'group';
-  }
-
-  public isInterfaceNode(): boolean {
-    return this.name.startsWith('i');
-  }
-
   public abstract build(): string;
 }

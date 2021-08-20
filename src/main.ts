@@ -4,8 +4,8 @@ import prettier from 'prettier';
 import normalize from './services/normalize';
 import { IGeneratedFile } from './contracts/ngx-openapi-gen';
 import { hasPresentKey } from './services/utils';
-import adapt from '../src/services/types-adapter';
-import buildNode from '../src/services/node-builder';
+import adapt from './services/types-adapter';
+import buildNode from './services/node-builder';
 
 const buildImports = (): string => {
   return `
@@ -27,6 +27,8 @@ const buildFileContent = (node: BaseNode): string => {
   });
 };
 
+const isInterfaceName = (value: string): boolean => (/^i/i).test(value);
+
 export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedFile> {
   const { components } = api;
   const schemas = components?.schemas ?? {};
@@ -42,8 +44,8 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
     .map(({ name, value }) => ({ name, value: adapt(value) }))
     .map(({ name, value }) => ({ name, value: normalize(value) }))
     .filter(hasPresentKey('value'))
+    .filter(({ name, value }) => isInterfaceName(name) && value.isGroup)
     .map(entity => buildNode(entity))
-    .filter(node => node.isFormGroup() && !node.isInterfaceNode())
     .map(node => ({
       name: node.name,
       content: buildFileContent(node)
