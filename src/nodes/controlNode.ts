@@ -1,4 +1,4 @@
-import { DefaultValueType, Definition, PlainEntity } from '../contracts/ngx-openapi-types';
+import { DefaultValueType, DefinitionKeys, DefinitionValues, PlainEntity } from '../contracts/ngx-openapi-types';
 import { isString } from '../services/utils';
 import getRule from '../validation/rules';
 import BaseNode from './baseNode';
@@ -25,7 +25,7 @@ export default class ControlNode extends BaseNode {
   constructor({ name, value }: PlainEntity) {
     super(name, 'control');
 
-    const definitions = Object.entries(value) as Array<[keyof Definition, Definition]>;
+    const definitions = Object.entries(value) as Array<[DefinitionKeys, DefinitionValues]>;
 
     this.validators = definitions
       .map(([name, definition]) => getRule(name, definition))

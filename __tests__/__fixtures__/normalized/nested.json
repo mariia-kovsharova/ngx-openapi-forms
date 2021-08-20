@@ -1,5 +1,6 @@
 {
     "Nested": {
+        "isGroup": true,
         "type": "object",
         "properties": {
             "foo": {

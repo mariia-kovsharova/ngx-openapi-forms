@@ -1,4 +1,4 @@
-import { Definition } from '../contracts/ngx-openapi-types';
+import { Definition, DefinitionKeys, DefinitionValues } from '../contracts/ngx-openapi-types';
 import { isNil } from '../services/utils';
 
 type Property = keyof Definition;
@@ -47,7 +47,7 @@ const mapper = [
   },
 ];
 
-export default <T extends Definition>(key: keyof Definition, value: T): string | null => {
+export default <T extends DefinitionValues>(key: DefinitionKeys, value: T): string | null => {
   const rule = mapper.find(({ check }) => check(key));
   if (!rule) {
     return null;

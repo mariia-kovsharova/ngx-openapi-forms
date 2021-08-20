@@ -34,7 +34,8 @@ const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>)
   const definition = <ObjectDefinition>{
     type: DataType.Object,
     properties: {},
-    requiredFields: []
+    requiredFields: [],
+    isGroup: true
   };
 
   return objDefinitions.reduce((def, currentObjDef) => {
