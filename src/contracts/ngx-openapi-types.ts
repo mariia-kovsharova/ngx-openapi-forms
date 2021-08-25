@@ -43,14 +43,14 @@ export type ArrayDefinition = Definition & {
   items?: NonArrayDataType[];
 }
 
-export type MergedDefinition = Definition & {
-  type: DataType.Object | DataType.String | DataType.Boolean | DataType.Integer,
-  allOf: Array<ObjectDefinition | MergedDefinition>
-}
-
 export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition;
 
 export type NonArrayDefinition = PlainDefinition | ObjectDefinition;
+
+export type MergedDefinition = Definition & {
+  type: DataType.Object | DataType.String | DataType.Boolean | DataType.Integer,
+  allOf: Array<Schema | MergedDefinition>
+}
 
 export type Property = {
   [name: string]: Schema

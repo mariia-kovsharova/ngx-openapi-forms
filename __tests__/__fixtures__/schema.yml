@@ -104,6 +104,11 @@ components:
           type: number
           minimum: 1
           maximum: 5
+
+    Fishes:
+      type: array
+      items:
+            $ref: "#/components/schemas/Fish"
     
     Aquarium:
       type: object
@@ -121,10 +126,15 @@ components:
         - allOf:
           - $ref: "#/components/schemas/Dog"
           - $ref: "#/components/schemas/Plain"
+          - $ref: "#/components/schemas/Fishes"
           - type: object
             properties:
               baz:
                 type: string
+              fff:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Fishes"
       
     Wrong:
       type: object

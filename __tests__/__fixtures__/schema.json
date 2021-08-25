@@ -154,6 +154,12 @@
           }
         }
       },
+      "Fishes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Fish"
+        }
+      },
       "Aquarium": {
         "type": "object",
         "allOf": [
@@ -188,10 +194,19 @@
                 "$ref": "#/components/schemas/Plain"
               },
               {
+                "$ref": "#/components/schemas/Fishes"
+              },
+              {
                 "type": "object",
                 "properties": {
                   "baz": {
                     "type": "string"
+                  },
+                  "fff": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Fishes"
+                    }
                   }
                 }
               }

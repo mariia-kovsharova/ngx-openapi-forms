@@ -41,10 +41,11 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
     });
 
   return entities
+    .filter(({ name }) => !isInterfaceName(name))
     .map(({ name, value }) => ({ name, value: adapt(value) }))
     .map(({ name, value }) => ({ name, value: normalize(value) }))
     .filter(hasPresentKey('value'))
-    .filter(({ name, value }) => isInterfaceName(name) && value.isGroup)
+    .filter(({ value }) => value.isGroup)
     .map(entity => buildNode(entity))
     .map(node => ({
       name: node.name,

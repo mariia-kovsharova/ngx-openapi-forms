@@ -1,6 +1,6 @@
 import {
   ObjectDefinition, PlainDefinition, PrimitiveDataType,
-  DataType, MergedDefinition, Schema
+  DataType, MergedDefinition, Schema, ArrayDefinition
 } from '../contracts/ngx-openapi-types';
 
 type SchemaDefinition = Schema | MergedDefinition;
@@ -25,12 +25,16 @@ const isObjectDefinition = (schema: SchemaDefinition): schema is ObjectDefinitio
   return !isMergedDefinition(schema) && schema.type === DataType.Object;
 }
 
+const isArrayDefinition = (schema: SchemaDefinition): schema is ArrayDefinition => {
+  return !isMergedDefinition(schema) && schema.type === DataType.Array;
+}
+
 type SchemaMapper = {
   check: (schema: SchemaDefinition) => boolean;
   transform: (schema: SchemaDefinition) => ObjectDefinition | null;
 };
 
-const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>): ObjectDefinition => {
+const mergeDefinitions = (definitions: ReadonlyArray<Schema>): ObjectDefinition => {
   const definition = <ObjectDefinition>{
     type: DataType.Object,
     properties: {},
@@ -38,14 +42,18 @@ const mergeObjectDefinitions = (objDefinitions: ReadonlyArray<ObjectDefinition>)
     isGroup: true
   };
 
-  return objDefinitions.reduce((def, currentObjDef) => {
-    const props = { ...def.properties, ...currentObjDef.properties };
-    const requiredFields = [...def.requiredFields, ...currentObjDef.requiredFields];
+  return definitions.reduce((acc: ObjectDefinition, currentDefinition: Schema) => {
+    if (!isObjectDefinition(currentDefinition)) {
+      return acc;
+    }
 
-    def.properties = props;
-    def.requiredFields = requiredFields;
+    const props = { ...acc.properties, ...currentDefinition.properties };
+    const requiredFields = [...acc.requiredFields, ...currentDefinition.requiredFields];
 
-    return def;
+    acc.properties = props;
+    acc.requiredFields = requiredFields;
+
+    return acc;
   }, definition);
 }
 
@@ -60,9 +68,9 @@ const processMergedDefinition = (definition: MergedDefinition): ObjectDefinition
       acc.push(innerDef);
     }
     return acc;
-  }, <Array<ObjectDefinition>>[]);
+  }, <Array<Schema>>[]);
 
-  return mergeObjectDefinitions(flattedDefinitions);
+  return mergeDefinitions(flattedDefinitions);
 }
 
 const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition => {
@@ -74,7 +82,7 @@ const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition
 
     if (isMergedDefinition(value)) {
       const flatted = normalize(value);
-      return ({ ...acc, [name]: flatted?.properties })
+      return flatted ? ({ ...acc, [name]: flatted.properties }) : acc;
     } else {
       return ({ ...acc, [name]: value })
     }
@@ -88,7 +96,7 @@ const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition
 
 const mappers: SchemaMapper[] = [
   {
-    check: (schema: SchemaDefinition) => isPrimitive(schema) || isEnum(schema),
+    check: (schema: SchemaDefinition) => isPrimitive(schema) || isEnum(schema) || isArrayDefinition(schema),
     transform: () => null,
   },
   {
