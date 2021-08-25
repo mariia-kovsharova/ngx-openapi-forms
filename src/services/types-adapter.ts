@@ -46,7 +46,7 @@ const complexMapper: MappingFn = (from: OpenAPIV3.SchemaObject): MergedDefinitio
     const mappedAllOf = from.allOf?.map(x => {
         const type = (x as OpenAPIV3.SchemaObject).type;
 
-        const mappingFn = typeDispatcher(type);
+        const mappingFn = typeDispatcher(type) ?? complexDispatcher(from);
         if (isNil(mappingFn)) {
             throw new Error(`Can not map schema: ${JSON.stringify(from)}`);
         }
