@@ -8,8 +8,7 @@ import { OpenAPI, OpenAPIV3 } from 'openapi-types';
 const SCHEMAS = ['schema.json'];
 // const SCHEMAS = ['schema.json', 'schema.yml', 'swagger.json'];
 const FIXTURES = path.join(__dirname, '__fixtures__');
-// const NORMALIZED_FOLDER = path.join(FIXTURES, 'normalized');
-// const FORMS_FOLDER = path.join(FIXTURES, 'forms');
+const FILES_FOLDER = path.join(FIXTURES, 'output-files');
 
 const OPTIONS: SwaggerParser.Options = {
     dereference: {
@@ -36,6 +35,14 @@ describe('main function', () => {
                 }
 
                 const generatedFileContents = generate(api);
+
+                for (const generation of generatedFileContents) {
+                    const { name, content } = generation;
+                    const contentFilePath = path.join(FILES_FOLDER, `${name}.txt`);
+                    const contentFromFile = await fs.readFile(contentFilePath, 'utf-8');
+
+                    expect(content).toBe(contentFromFile);
+                }
 
                 console.log(generatedFileContents);
 

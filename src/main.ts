@@ -11,7 +11,9 @@ const buildImports = (): string => {
   return `
   /* tslint:disable */
   /* eslint-disable */
-  import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';`;
+  import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+  
+  `;
 };
 
 const buildFileContent = (node: BaseNode): string => {

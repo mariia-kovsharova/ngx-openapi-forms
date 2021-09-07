@@ -1,0 +1,29 @@
+/* tslint:disable */
+/* eslint-disable */
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const fish = new FormGroup({
+  id: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    []
+  ),
+  kind: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+  color: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+});
+
+export default fish;
