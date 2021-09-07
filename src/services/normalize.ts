@@ -1,33 +1,5 @@
-import {
-  ObjectDefinition, PlainDefinition, PrimitiveDataType,
-  DataType, MergedDefinition, Schema, ArrayDefinition
-} from '../contracts/ngx-openapi-types';
-
-type SchemaDefinition = Schema | MergedDefinition;
-
-const isPrimitiveDataType = (value: DataType): value is PrimitiveDataType => {
-  return value !== DataType.Array && value !== DataType.Object;
-}
-
-const isMergedDefinition = (schema: SchemaDefinition): schema is MergedDefinition => {
-  return !!(schema as MergedDefinition).allOf;
-}
-
-const isPrimitive = (schema: SchemaDefinition): boolean => {
-  return !isMergedDefinition(schema) && isPrimitiveDataType(schema.type);
-}
-
-const isEnum = (schema: SchemaDefinition): boolean => {
-  return !!(schema as PlainDefinition).enum;
-}
-
-const isObjectDefinition = (schema: SchemaDefinition): schema is ObjectDefinition => {
-  return !isMergedDefinition(schema) && schema.type === DataType.Object;
-}
-
-const isArrayDefinition = (schema: SchemaDefinition): schema is ArrayDefinition => {
-  return !isMergedDefinition(schema) && schema.type === DataType.Array;
-}
+import { ObjectDefinition, DataType, MergedDefinition, Schema, SchemaDefinition } from '../contracts/ngx-openapi-types';
+import { isObjectDefinition, isMergedDefinition, isEnum, isArrayDefinition, isPrimitive } from './utils';
 
 type SchemaMapper = {
   check: (schema: SchemaDefinition) => boolean;

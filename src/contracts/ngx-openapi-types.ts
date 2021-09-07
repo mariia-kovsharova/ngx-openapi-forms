@@ -56,6 +56,8 @@ export type Property = {
   [name: string]: Schema
 }
 
+export type SchemaDefinition = Schema | MergedDefinition;
+
 export interface ObjectEntity {
   name: string;
   value: ObjectDefinition;
