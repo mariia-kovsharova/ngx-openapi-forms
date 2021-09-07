@@ -80,7 +80,7 @@ const complexDispatcher = (from: OpenAPIV3.SchemaObject): MappingFn | null => {
 }
 
 export default (from: OpenAPIV3.SchemaObject): Schema | MergedDefinition | never => {
-    const mappingFn = typeDispatcher(from.type) ?? complexDispatcher(from);
+    const mappingFn = complexDispatcher(from) ?? typeDispatcher(from.type);
     if (!mappingFn) {
         throw new Error(`Can not find mapping function for: ${JSON.stringify(from)}`);
     }
