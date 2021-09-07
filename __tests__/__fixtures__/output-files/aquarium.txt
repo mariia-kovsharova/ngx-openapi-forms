@@ -1,0 +1,37 @@
+/* tslint:disable */
+/* eslint-disable */
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const aquarium = new FormGroup({
+  shape: new FormControl(
+    {
+      value: 'round',
+      disabled: false,
+    },
+    []
+  ),
+  background: new FormControl(
+    {
+      value: 'transparent',
+      disabled: false,
+    },
+    []
+  ),
+  fishes: new FormArray([]),
+  lights: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.min(1), Validators.max(5)]
+  ),
+  foo: new FormControl(
+    {
+      value: 'baz',
+      disabled: false,
+    },
+    []
+  ),
+});
+
+export default aquarium;
