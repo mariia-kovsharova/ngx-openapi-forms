@@ -38,11 +38,11 @@ const mapper = [
     process: (value: unknown) => buildValidator(BasicValidators.MaxLength, value),
   },
   {
-    check: (name: Property) => name === 'minValue',
+    check: (name: Property) => name === 'minimum',
     process: (value: unknown) => buildValidator(BasicValidators.MinValue, value),
   },
   {
-    check: (name: Property) => name === 'maxValue',
+    check: (name: Property) => name === 'maximum',
     process: (value: unknown) => buildValidator(BasicValidators.MaxValue, value),
   },
 ];
