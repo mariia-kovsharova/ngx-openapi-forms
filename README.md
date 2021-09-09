@@ -1,14 +1,13 @@
-[![Build Status](https://travis-ci.org/fiorsaoirse/angular-openapi-forms-gen.svg?branch=master)](https://travis-ci.org/fiorsaoirse/angular-openapi-forms-gen)
-<a href="https://codeclimate.com/github/fiorsaoirse/angular-openapi-forms-gen/maintainability"><img src="https://api.codeclimate.com/v1/badges/6d1fc8b0ef0b27065dad/maintainability" /></a>
+[![Build Status](https://travis-ci.org/fiorsaoirse/ngx-openapi-forms.svg?branch=master)](https://travis-ci.org/fiorsaoirse/ngx-openapi-forms)
+<a href="https://codeclimate.com/github/fiorsaoirse/ngx-openapi-forms/maintainability"><img src="https://api.codeclimate.com/v1/badges/6d1fc8b0ef0b27065dad/maintainability" /></a>
 
 This is an npm-cli library that allows you to generate Angular Reactive Forms for models from the Open-Api 3.0 description.
 
-
 ### Installation
-1. Run `npm i angular-openapi-form-gen --save-dev` in terminal
+1. Run `npm i ngx-openapi-forms --save-dev` in terminal
 
 ### Usage
-1. In terminal type `angular-openapi-form-gen --input <path-to-openapi> --output <output-dir-path>`. All params are required.
+1. In terminal type `ngx-openapi-forms --input <path-to-openapi-file> --output <output-dir-path>`. All params are required.
 2. The lib will parse your open-api file than create one file per top-level model of "object" type in the description.
 3. The created `model.ts` file will contain Angular FormGroup with FormControls and FormArrays (exported as default) from the open-api model, including validation and default values.
 
@@ -75,10 +74,9 @@ Fish:
         color:
           type: string
       required:
-        - color
-            
+        - color    
     
-IAquarium:
+IAquariumLook:
   type: object
   properties:
     shape:
@@ -87,21 +85,117 @@ IAquarium:
     background:
       type: string
       default: "transparent"
-    
-Aquarium:
+          
+IAquariumProps:
   type: object
   properties:
-    features:
-      $ref: "#/components/schemas/IAquarium"
     fishes:
       type: array
       items:
-        $ref: "#/components/schemas/Fish" 
+        $ref: "#/components/schemas/Fish"
+      lights:
+        type: number
+        minimum: 1
+        maximum: 5
+
+Fishes:
+  type: array
+  items:
+    $ref: "#/components/schemas/Fish"
+    
+Aquarium:
+  type: object
+  allOf:
+    - $ref: "#/components/schemas/IAquariumLook"
+    - $ref: "#/components/schemas/IAquariumProps"
+    - type: object
+      properties:
+        foo:
+          type: string
+          default: "baz"
 ```
 The lib will generate Reactive forms for **Cat**, **Dog**, **Fish** and **Aquarium** openapi-models.
-**PlainProperty** is not a FormGroup, **IPet** and **IAquarium** are interfaces or abstract classes.
+**PlainProperty** is not a FormGroup, **IPet**, **IAquariumLook** and **IAquariumProps** are interfaces or abstract classes.
+
 Examples of generated multiply files:
 
+```
+/* tslint:disable */
+/* eslint-disable */
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
-In case of the **Aquarium** model, the nested entity "features" is used as one of the properties in the model.
-The lib will generate a nested FormGroup:
+const cat = new FormGroup({
+  id: new FormControl(
+    {
+      value: null,
+      disabled: true,
+    },
+    []
+  ),
+  kind: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+  tail: new FormControl(
+    {
+      value: true,
+      disabled: false,
+    },
+    [Validators.required]
+  ),
+  name: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.pattern(/^[a-zA-Z]&/), Validators.required]
+  ),
+});
+
+export default cat;
+
+```
+
+```
+/* tslint:disable */
+/* eslint-disable */
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+
+const aquarium = new FormGroup({
+  shape: new FormControl(
+    {
+      value: 'round',
+      disabled: false,
+    },
+    []
+  ),
+  background: new FormControl(
+    {
+      value: 'transparent',
+      disabled: false,
+    },
+    []
+  ),
+  fishes: new FormArray([]),
+  lights: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.min(1), Validators.max(5)]
+  ),
+  foo: new FormControl(
+    {
+      value: 'baz',
+      disabled: false,
+    },
+    []
+  ),
+});
+
+export default aquarium;
+
+```
