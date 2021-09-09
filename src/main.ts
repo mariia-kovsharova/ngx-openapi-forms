@@ -42,9 +42,11 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
       };
     });
 
-  return entities
+  const a = entities
     .filter(({ name }) => !isInterfaceName(name))
     .map(({ name, value }) => ({ name, value: adapt(value) }))
+
+  const b = a
     .map(({ name, value }) => ({ name, value: normalize(value) }))
     .filter(hasPresentKey('value'))
     .filter(({ value }) => value.isGroup)
@@ -53,4 +55,6 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
       name: node.name,
       content: buildFileContent(node)
     }));
+
+  return b;
 }

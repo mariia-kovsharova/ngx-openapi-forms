@@ -17,8 +17,8 @@ export type Definition = {
   enum?: Array<unknown>;
   format?: string;
   pattern?: string;
-  minValue?: number;
-  maxValue?: number;
+  minimum?: number;
+  maximum?: number;
   readOnly?: boolean;
   writeOnly?: boolean;
   minLength?: number;

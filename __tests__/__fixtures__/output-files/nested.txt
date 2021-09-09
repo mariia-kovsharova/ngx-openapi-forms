@@ -2,7 +2,14 @@
 /* eslint-disable */
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
-const dog = new FormGroup({
+const nested = new FormGroup({
+  foo: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    [Validators.pattern(/^[123]&/)]
+  ),
   id: new FormControl(
     {
       value: null,
@@ -33,11 +40,19 @@ const dog = new FormGroup({
   ),
   name: new FormControl(
     {
-      value: null,
+      value: 'Bob',
       disabled: false,
     },
     [Validators.pattern(/^[a-zA-Z]&/), Validators.required]
   ),
+  baz: new FormControl(
+    {
+      value: null,
+      disabled: false,
+    },
+    []
+  ),
+  fff: new FormArray([]),
 });
 
 export default nested;

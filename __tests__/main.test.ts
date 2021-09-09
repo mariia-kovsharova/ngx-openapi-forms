@@ -5,8 +5,7 @@ import generate from '../src/main';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { OpenAPI, OpenAPIV3 } from 'openapi-types';
 
-const SCHEMAS = ['schema.json'];
-// const SCHEMAS = ['schema.json', 'schema.yml', 'swagger.json'];
+const SCHEMAS = ['schema.json', 'schema.yml'];
 const FIXTURES = path.join(__dirname, '__fixtures__');
 const FILES_FOLDER = path.join(FIXTURES, 'output-files');
 
@@ -41,15 +40,21 @@ describe('main function', () => {
                     const contentFilePath = path.join(FILES_FOLDER, `${name}.txt`);
                     const contentFromFile = await fs.readFile(contentFilePath, 'utf-8');
 
-                    expect(content).toBe(contentFromFile);
-                }
+                    const formattedContent = prettier.format(contentFromFile, {
+                        parser: 'typescript',
+                        trailingComma: 'es5',
+                        singleQuote: true,
+                        tabWidth: 2,
+                        useTabs: false
+                    });
 
-                console.log(generatedFileContents);
+                    expect(content).toBe(formattedContent);
+                }
 
             } catch (error) {
                 console.error(error);
                 throw error;
             }
-        })
-    })
+        });
+    });
 });
