@@ -32,7 +32,15 @@ describe('build nodes function', () => {
                 useTabs: false
             });
 
-            expect(builtData).toBe(resultDataContent);
+            const resultDataFormatted = prettier.format(resultDataContent, {
+                parser: 'typescript',
+                trailingComma: 'es5',
+                singleQuote: true,
+                tabWidth: 2,
+                useTabs: false
+            });
+
+            expect(builtData).toBe(resultDataFormatted);
         })
     })
 });
