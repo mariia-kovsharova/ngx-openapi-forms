@@ -4,8 +4,8 @@ import { isNil } from '../services/utils';
 import BaseNode from './baseNode';
 
 export default class GroupNode extends BaseNode {
-
   private readonly parent?: BaseNode;
+
   private readonly children: Array<BaseNode>;
 
   constructor({ name, value }: ObjectEntity, childMapper: NodeConstructor, parent?: BaseNode) {
@@ -18,7 +18,7 @@ export default class GroupNode extends BaseNode {
 
       requiredFields.forEach((propName: string) => {
         if (allControlsNames.includes(propName)) {
-          properties[propName] = { ...properties[propName], required: true }
+          properties[propName] = { ...properties[propName], required: true };
         }
       });
     }

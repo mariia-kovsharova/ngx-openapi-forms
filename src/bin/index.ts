@@ -2,9 +2,9 @@
 import { program } from 'commander';
 import { promises as fs } from 'fs';
 import path from 'path';
-import generate from '../main';
 import { OpenAPI, OpenAPIV3 } from 'openapi-types';
 import SwaggerParser from '@apidevtools/swagger-parser';
+import generate from '../main';
 import { IGeneratedFile } from '../contracts/ngx-openapi-gen';
 
 const isOpenApiV3Document = (api: OpenAPI.Document): api is OpenAPIV3.Document => {
@@ -30,8 +30,8 @@ program
           circular: true,
         },
         validate: {
-          schema: true
-        }
+          schema: true,
+        },
       };
 
       const api = await SwaggerParser.validate(inputFilePath, options);
@@ -46,7 +46,9 @@ program
       await Promise.all(generatedFileContents.map(writeFile));
 
       // eslint-disable-next-line no-console
-      console.log(`Generating files successfully completed. Files created at path: ${outputFilePath} (click link to open)`);
+      console.log(
+        `Generating files successfully completed. Files created at path: ${outputFilePath} (click link to open)`
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Something went wrong: %s', error);

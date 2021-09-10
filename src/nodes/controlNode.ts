@@ -1,16 +1,21 @@
 import { DefaultValueType, DefinitionKeys, DefinitionValues, PlainEntity } from '../contracts/ngx-openapi-types';
-import { isString } from '../services/utils';
+import { isNil, isString } from '../services/utils';
 import getRule from '../validation/rules';
 import BaseNode from './baseNode';
 
 export default class ControlNode extends BaseNode {
-
   private readonly disabled: boolean;
+
   private readonly defaultValue: DefaultValueType;
+
   private readonly validators?: ReadonlyArray<string>;
 
+  private static transformDefaultValue<T>(value: null): string;
+
+  private static transformDefaultValue<T>(value: T): NonNullable<T>;
+
   private static transformDefaultValue<T>(value: T | null): NonNullable<T> | string {
-    if (value === null) {
+    if (isNil(value)) {
       return 'null';
     }
 
@@ -19,11 +24,11 @@ export default class ControlNode extends BaseNode {
     }
 
     // TODO: fix
-    return value as any;
+    return value;
   }
 
-  constructor({ name, value }: PlainEntity) {
-    super(name, 'control');
+  constructor({ name: entityName, value }: PlainEntity) {
+    super(entityName, 'control');
 
     const definitions = Object.entries(value) as Array<[DefinitionKeys, DefinitionValues]>;
 
@@ -32,7 +37,7 @@ export default class ControlNode extends BaseNode {
       .filter((v: string | null): v is string => isString(v));
 
     this.disabled = definitions.map(([name]) => name).includes('readOnly');
-    this.defaultValue = value['default'] ?? null;
+    this.defaultValue = value.default ?? null;
   }
 
   public build(): string {

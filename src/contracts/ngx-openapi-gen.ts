@@ -1,4 +1,4 @@
 export interface IGeneratedFile {
-    name: string;
-    content: string;
+  name: string;
+  content: string;
 }

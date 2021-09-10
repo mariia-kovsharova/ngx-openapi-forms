@@ -11,7 +11,7 @@ const mergeDefinitions = (definitions: ReadonlyArray<Schema>): ObjectDefinition 
     type: DataType.Object,
     properties: {},
     requiredFields: [],
-    isGroup: true
+    isGroup: true,
   };
 
   return definitions.reduce((acc: ObjectDefinition, currentDefinition: Schema) => {
@@ -27,15 +27,17 @@ const mergeDefinitions = (definitions: ReadonlyArray<Schema>): ObjectDefinition 
 
     return acc;
   }, definition);
-}
+};
 
 const processMergedDefinition = (definition: MergedDefinition): ObjectDefinition => {
   const { allOf } = definition;
 
   const flattedDefinitions = allOf.reduce((acc, innerDef) => {
     if (isMergedDefinition(innerDef)) {
-      const norm = normalize(innerDef);
-      norm && acc.push(norm);
+      const normalized = normalize(innerDef);
+      if (normalized) {
+        acc.push(normalized);
+      }
     } else {
       acc.push(innerDef);
     }
@@ -43,7 +45,7 @@ const processMergedDefinition = (definition: MergedDefinition): ObjectDefinition
   }, <Array<Schema>>[]);
 
   return mergeDefinitions(flattedDefinitions);
-}
+};
 
 const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition => {
   const { properties } = definition;
@@ -54,17 +56,16 @@ const processObjectDefinition = (definition: ObjectDefinition): ObjectDefinition
 
     if (isMergedDefinition(value)) {
       const flatted = normalize(value);
-      return flatted ? ({ ...acc, [name]: flatted.properties }) : acc;
-    } else {
-      return ({ ...acc, [name]: value })
+      return flatted ? { ...acc, [name]: flatted.properties } : acc;
     }
+    return { ...acc, [name]: value };
   }, {});
 
   return <ObjectDefinition>{
     type: DataType.Object,
-    properties: props
-  }
-}
+    properties: props,
+  };
+};
 
 const mappers: SchemaMapper[] = [
   {
@@ -78,7 +79,7 @@ const mappers: SchemaMapper[] = [
   {
     check: (schema: SchemaDefinition) => isObjectDefinition(schema),
     transform: (schema: SchemaDefinition) => processObjectDefinition(schema as ObjectDefinition),
-  }
+  },
 ];
 
 const normalize = (entity: SchemaDefinition): ObjectDefinition | null | never => {

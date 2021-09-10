@@ -6,7 +6,7 @@ export enum DataType {
   String = 'string',
   Boolean = 'boolean',
   Integer = 'integer',
-  Number = 'number'
+  Number = 'number',
 }
 
 export type PrimitiveDataType = DataType.Boolean | DataType.String | DataType.Integer;
@@ -30,7 +30,7 @@ export type Definition = {
 
 export type PlainDefinition = Definition & {
   type: PrimitiveDataType;
-}
+};
 
 export type ObjectDefinition = Definition & {
   type: DataType.Object;
@@ -39,49 +39,49 @@ export type ObjectDefinition = Definition & {
 };
 
 export type ArrayDefinition = Definition & {
-  type: DataType.Array,
+  type: DataType.Array;
   items?: NonArrayDataType[];
-}
+};
 
 export type Schema = PlainDefinition | ObjectDefinition | ArrayDefinition;
 
 export type NonArrayDefinition = PlainDefinition | ObjectDefinition;
 
 export type MergedDefinition = Definition & {
-  type: DataType.Object | DataType.String | DataType.Boolean | DataType.Integer,
-  allOf: Array<Schema | MergedDefinition>
-}
-
-export type Property = {
-  [name: string]: Schema
-}
+  type: DataType.Object | DataType.String | DataType.Boolean | DataType.Integer;
+  allOf: Array<Schema | MergedDefinition>;
+};
 
 export type SchemaDefinition = Schema | MergedDefinition;
+
+export type Property = {
+  [name: string]: Schema;
+};
 
 export interface ObjectEntity {
   name: string;
   value: ObjectDefinition;
-};
+}
 
 export interface ArrayEntity {
   name: string;
   value: ArrayDefinition;
-};
+}
 
 export interface PlainEntity {
   name: string;
   value: PlainDefinition;
-};
+}
 
-// TODO: check why 
+// TODO: check why
 // export type Entity = ObjectEntity | ArrayEntity | PlainEntity;
 export type Entity = {
   name: string;
   value: ObjectDefinition | ArrayDefinition | PlainDefinition;
 };
 
-type Keys<T> = keyof (Required<T>);
-type Values<T> = (Required<T>)[keyof T];
+type Keys<T> = keyof Required<T>;
+type Values<T> = Required<T>[keyof T];
 
 export type DefinitionKeys = Keys<Definition>;
 export type DefinitionValues = Values<Definition>;

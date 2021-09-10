@@ -25,22 +25,21 @@ const buildFileContent = (node: BaseNode): string => {
     parser: 'typescript',
     singleQuote: true,
     trailingComma: 'es5',
-    tabWidth: 2
+    tabWidth: 2,
   });
 };
 
-const isInterfaceName = (value: string): boolean => (/^i/i).test(value);
+const isInterfaceName = (value: string): boolean => /^i/i.test(value);
 
 export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedFile> {
   const { components } = api;
   const schemas = components?.schemas ?? {};
-  const entities = Object.entries(schemas)
-    .map(([name, value]) => {
-      return {
-        name,
-        value: value as OpenAPIV3.SchemaObject
-      };
-    });
+  const entities = Object.entries(schemas).map(([name, value]) => {
+    return {
+      name,
+      value: value as OpenAPIV3.SchemaObject,
+    };
+  });
 
   return entities
     .filter(({ name }) => !isInterfaceName(name))
@@ -48,9 +47,9 @@ export default function main(api: OpenAPIV3.Document): ReadonlyArray<IGeneratedF
     .map(({ name, value }) => ({ name, value: normalize(value) }))
     .filter(hasPresentKey('value'))
     .filter(({ value }) => value.isGroup)
-    .map(entity => buildNode(entity))
-    .map(node => ({
+    .map((entity) => buildNode(entity))
+    .map((node) => ({
       name: node.name,
-      content: buildFileContent(node)
+      content: buildFileContent(node),
     }));
 }

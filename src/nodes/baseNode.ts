@@ -3,8 +3,8 @@ import camelcase from 'camelcase';
 type FormNodeType = 'control' | 'array' | 'group';
 
 export default abstract class BaseNode {
-
   private readonly _name: string;
+
   private readonly _type: FormNodeType;
 
   constructor(name: string, type: FormNodeType) {

@@ -6,7 +6,6 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
     'prettier',
-    'prettier/@typescript-eslint',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -34,6 +33,10 @@ module.exports = {
         ts: 'never',
       },
     ],
+    'no-underscore-dangle': 0,
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
+    'no-use-before-define': 0,
   },
   settings: {
     'import/extensions': ['.js', '.mjs', '.jsx', '.ts', '.tsx'],

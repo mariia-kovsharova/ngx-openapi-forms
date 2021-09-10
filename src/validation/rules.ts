@@ -10,11 +10,11 @@ enum BasicValidators {
   MinLength = 'minLength',
   MaxLength = 'maxLength',
   MinValue = 'min',
-  MaxValue = 'max'
+  MaxValue = 'max',
 }
 
 const buildValidator = (type: BasicValidators, value?: unknown): string =>
-  isNil(value) ? `Validators.${type}` : `Validators.${type}(${value})`;
+  isNil(value) ? `Validators.${type}` : `Validators.${type}(${String(value)})`;
 
 const mapper = [
   {
@@ -23,7 +23,7 @@ const mapper = [
   },
   {
     check: (name: Property) => name === 'pattern',
-    process: (value: unknown) => buildValidator(BasicValidators.Pattern, `/${value}/`),
+    process: (value: unknown) => buildValidator(BasicValidators.Pattern, `/${value as string}/`),
   },
   {
     check: (name: Property) => name === 'required',
