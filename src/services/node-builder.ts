@@ -1,11 +1,16 @@
-import { Entity, DataType, ArrayEntity, ObjectEntity, PlainEntity } from '../contracts/ngx-openapi-types';
+import {
+  Entity,
+  DataType,
+  ArrayEntity,
+  ObjectEntity,
+  PlainEntity,
+  NodeConstructor,
+} from '../contracts/ngx-openapi-types';
 import ArrayNode from '../nodes/arrayNode';
 import BaseNode from '../nodes/baseNode';
 import ControlNode from '../nodes/controlNode';
 import GroupNode from '../nodes/groupNode';
 import { isNil } from './utils';
-
-export type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;
 
 const entityMapper =
   (type: DataType): NodeConstructor =>

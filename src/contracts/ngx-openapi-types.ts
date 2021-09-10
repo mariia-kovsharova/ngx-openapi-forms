@@ -1,3 +1,5 @@
+import BaseNode from '../nodes/baseNode';
+
 export type DefaultValueType = string | number | boolean | null;
 
 export enum DataType {
@@ -85,3 +87,5 @@ type Values<T> = Required<T>[keyof T];
 
 export type DefinitionKeys = Keys<Definition>;
 export type DefinitionValues = Values<Definition>;
+
+export type NodeConstructor = (e: Entity, p?: BaseNode) => BaseNode;

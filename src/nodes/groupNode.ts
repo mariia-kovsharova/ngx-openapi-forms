@@ -1,5 +1,4 @@
-import { Entity, ObjectEntity, Schema } from '../contracts/ngx-openapi-types';
-import { NodeConstructor } from '../services/node-builder';
+import { Entity, NodeConstructor, ObjectEntity, Schema } from '../contracts/ngx-openapi-types';
 import { isNil } from '../services/utils';
 import BaseNode from './baseNode';
 
@@ -8,10 +7,10 @@ export default class GroupNode extends BaseNode {
 
   private readonly children: Array<BaseNode>;
 
-  constructor({ name, value }: ObjectEntity, childMapper: NodeConstructor, parent?: BaseNode) {
-    super(name, 'group');
+  constructor({ name: objectName, value: objectValue }: ObjectEntity, childMapper: NodeConstructor, parent?: BaseNode) {
+    super(objectName, 'group');
 
-    const { properties, requiredFields } = value;
+    const { properties, requiredFields } = objectValue;
 
     if (requiredFields && properties) {
       const allControlsNames = Object.keys(properties);

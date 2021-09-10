@@ -1,5 +1,5 @@
 import { DefaultValueType, DefinitionKeys, DefinitionValues, PlainEntity } from '../contracts/ngx-openapi-types';
-import { isNil, isString } from '../services/utils';
+import { isString } from '../services/utils';
 import getRule from '../validation/rules';
 import BaseNode from './baseNode';
 
@@ -10,21 +10,12 @@ export default class ControlNode extends BaseNode {
 
   private readonly validators?: ReadonlyArray<string>;
 
-  private static transformDefaultValue<T>(value: null): string;
-
-  private static transformDefaultValue<T>(value: T): NonNullable<T>;
-
   private static transformDefaultValue<T>(value: T | null): NonNullable<T> | string {
-    if (isNil(value)) {
-      return 'null';
-    }
-
     if (isString(value)) {
       return `"${value}"`;
     }
 
-    // TODO: fix
-    return value;
+    return value ?? 'null';
   }
 
   constructor({ name: entityName, value }: PlainEntity) {
