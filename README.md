@@ -4,12 +4,12 @@
 This is an npm-cli library that allows you to generate Angular Reactive Forms for models from the Open-Api 3.0 description.
 
 ### Installation
-1. Run `npm i ngx-openapi-forms --save-dev` in terminal
+1. Run `npm i ngx-openapi-forms --save-dev`
 
 ### Usage
-1. In terminal type `ngx-openapi-forms --input <path-to-openapi-file> --output <output-dir-path>`. All params are required.
-2. The lib will parse your open-api file than create one file per top-level model of "object" type in the description.
-3. The created `model.ts` file will contain Angular FormGroup with FormControls and FormArrays (exported as default) from the open-api model, including validation and default values.
+1. In a terminal type `ngx-openapi-forms --input <path-to-openapi-file> --output <output-dir-path>`. All params are required.
+2. The lib will parse your open-api file then create one file for each top-level model of "object" type in the description.
+3. The generated `model.ts` file will contain an object - Angular FormGroup with FormControls and FormArrays (exported as default) from the open-api model, including validation and default values.
 
 ### Important note
 You should import a deep copy of the generated FormGroup object to avoid unexpected behavior.
